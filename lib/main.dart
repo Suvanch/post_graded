@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'studentObject.dart';
 
 void main() => runApp(gradedApp());
-
 class gradedApp extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
@@ -10,13 +10,57 @@ class gradedApp extends StatefulWidget {
   }
   //MyApp createState() => MyApp();
 }
+_MyColor changeGradeColor(double grade) {
+    const List<_MyColor> myBgColors = const <_MyColor>[
+    const _MyColor(null, 'Clear'),
+    const _MyColor(const Color(0xFF76FF03), 'Green'),
+      const _MyColor(const Color(0xFFC6FF00), 'LightGreen'),
+    const _MyColor(const Color(0xFFFFFF00), 'Yellow'),
+    const _MyColor(const Color(0xFFFF1744), 'Red'),
+  ];
+    if(grade >90){
+      return myBgColors[1];
+    }
+    else if(grade > 80){
+      return myBgColors[2];
+    }
+    else if(grade > 70){
+      return myBgColors[3];
+    }
+    else {
+      return myBgColors[4];
+    }
+  }
+_MyColor changeGpaColor(double grade) {
+  const List<_MyColor> myBgColors = const <_MyColor>[
+    const _MyColor(null, 'Clear'),
+    const _MyColor(const Color(0xFF76FF03), 'Green'),
+    const _MyColor(const Color(0xFFC6FF00), 'LightGreen'),
+    const _MyColor(const Color(0xFFFFFF00), 'Yellow'),
+    const _MyColor(const Color(0xFFFF1744), 'Red'),
 
-void changeText() {}
+  ];
+  if(grade >3.0){
+    return myBgColors[1];
+  }
+  else if(grade > 2.0){
+    return myBgColors[2];
+  }
+  else if(grade > 1.0){
+    return myBgColors[3];
+  }
+  else {
+    return myBgColors[4];
+  }
+}
+ studentObject student1 = new studentObject();
 
 class MyApp extends State<gradedApp> {
-  double currentGpa = 4.0;
-  double cummulGpa = 4.0;
-  Map<String, double> map1 = {'Cs1337': 99.3 , 'Math 2414': 90.3, 'Nah U goog': 69.69};
+
+  double currentGpa = student1.getCurrentGPA();
+  double cummulGpa = student1.getCumulativeGpa();
+
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -40,7 +84,7 @@ class MyApp extends State<gradedApp> {
                   ),
                   IconButton(
                     icon: Icon(
-                        appBarIcons(title: 'Car', icon: Icons.autorenew).icon),
+                        appBarIcons(title: 'Refresh', icon: Icons.autorenew).icon),
                     onPressed: () {
                       print("ye i clicke it");
                     },
@@ -49,68 +93,7 @@ class MyApp extends State<gradedApp> {
               ),
             ),
             Expanded(
-              child: ListView(
-                padding: const EdgeInsets.all(8),
-                children: <Widget>[
-                  Container(
-                      height: 50,
-                      color: Colors.amber[600],
-                      //child:  Center(child: Text('Entry A')),
-                      child: Row(
-                        children: <Widget>[
-                          Card(
-                            child: Container(
-                              height: 49,
-                              width: 300,
-                              color: Colors.grey,
-                              child: Text(
-                                "dfdfdf",
-                                textAlign: TextAlign.center,
-                              ),
-                              alignment: Alignment(-1.0, 0.0),
-                            ),
-                          ),
-                          Card(
-                            child: Container(
-                              height: 49,
-                              width: 75,
-                              color: Colors.grey,
-                              child: Text(
-                                "99.5",
-                              ),
-                              alignment: Alignment(0.0, 0.0),
-                            ),
-                          ),
-
-                        ],
-                      )),
-                  Container(
-                    height: 50,
-                    color: Colors.amber[600],
-                    child: const Center(child: Text('Entry A')),
-                  ),
-                  Container(
-                    height: 50,
-                    color: Colors.amber[600],
-                    child: const Center(child: Text('Entry A')),
-                  ),
-                  Container(
-                    height: 50,
-                    color: Colors.amber[600],
-                    child: const Center(child: Text('Entry A')),
-                  ),
-                  Container(
-                    height: 50,
-                    color: Colors.amber[500],
-                    child: const Center(child: Text('Entry B')),
-                  ),
-                  Container(
-                    height: 50,
-                    color: Colors.amber[100],
-                    child: const Center(child: Text('Entry C')),
-                  ),
-                ],
-              ),
+              child: currentSemesterListView()
             ),
             Center(
               child: Text(
@@ -120,54 +103,22 @@ class MyApp extends State<gradedApp> {
               ),
             ),
             Expanded(
-              child: ListView(
-                padding: const EdgeInsets.all(8),
-                children: <Widget>[
-                  Container(
-                    height: 50,
-                    color: Colors.amber[600],
-                    child: const Center(child: Text('Entry A')),
-                  ),
-                  Container(
-                    height: 50,
-                    color: Colors.amber[600],
-                    child: const Center(child: Text('Entry A')),
-                  ),
-                  Container(
-                    height: 50,
-                    color: Colors.amber[600],
-                    child: const Center(child: Text('Entry A')),
-                  ),
-                  Container(
-                    height: 50,
-                    color: Colors.amber[600],
-                    child: const Center(child: Text('Entry A')),
-                  ),
-                  Container(
-                    height: 50,
-                    color: Colors.amber[500],
-                    child: const Center(child: Text('Entry B')),
-                  ),
-                  Container(
-                    height: 50,
-                    color: Colors.amber[100],
-                    child: const Center(child: Text('Entry C')),
-                  ),
-                ],
-              ),
-            ),
+              child: previousSemesterListView()),
             Row(
               children: <Widget>[
                 Card(
                   child: Container(
+                    decoration: new BoxDecoration(
+                        color: Colors.blueAccent,
+                        borderRadius: new BorderRadius.all(Radius.circular(30))
+                    ),
                     width: 190,
-                    color: Colors.grey,
                     child: Column(
                       children: <Widget>[
                         Padding(
                           padding: EdgeInsets.fromLTRB(32.0, 0.0, 32.0, 0.0),
                           child: Text(
-                            "Cummulative GPA",
+                            "Cumulative GPA",
                             textScaleFactor: 1.5,
                             textAlign: TextAlign.center,
                           ),
@@ -185,9 +136,12 @@ class MyApp extends State<gradedApp> {
                 ),
                 Card(
                   child: Container(
+                    decoration: new BoxDecoration(
+                        color: Colors.blueAccent,
+                        borderRadius: new BorderRadius.all(Radius.circular(30))
+                    ),
                     width: 190,
                     height: 100,
-                    color: Colors.grey,
                     child: Column(
                       children: <Widget>[
                         Padding(
@@ -223,4 +177,130 @@ class appBarIcons {
 
   final String title;
   final IconData icon;
+}
+class currentSemesterListView extends StatelessWidget {
+  @override
+  //Map nug = {"Cs1337":99.5,"Math2414":85.3,"AHST":77.0,"AHSmmT":60.0,"Nug":90.0};
+  static Map nug = student1.getCurrentSemester();
+  //int lengths = nug.length;
+
+  //print(lengths);
+  Widget build(BuildContext context) {
+    return ListView.builder(
+        itemCount: nug.length,
+        itemBuilder: (BuildContext context, int index){
+          String key = nug.keys.elementAt(index);
+          return new Container(
+              height: 50,
+              //color: Colors.amber[600],
+              child:Row(
+              children: <Widget>[
+              Card(
+
+                child: Container(
+
+                  height: 49,
+                  width: 300,
+                  decoration: new BoxDecoration(
+                      color: changeGradeColor(nug[key]).color,
+                      borderRadius: new BorderRadius.all(Radius.circular(15))
+                  ),
+
+                  //color: Colors.grey,myBgColors[1].color,
+                  child: Padding(
+                    padding:EdgeInsets.fromLTRB(20, 0, 0, 0),
+                    child: Text(
+                      key,
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                  alignment: Alignment(-1.0, 0.0),
+                ),
+              ),
+              Card(
+                child: Container(
+                  height: 49,
+                  width: 75,
+
+                  color: changeGradeColor(nug[key]).color,
+                  child: Text(
+                    nug[key].toString(),
+                  ),
+                  alignment: Alignment(0.0, 0.0),
+                ),
+              ),
+            ],
+          ));
+        },
+    );
+  }
+}
+
+class previousSemesterListView extends StatelessWidget{
+  @override
+  //Map nug = {"Cs1337":99.5,"Math2414":85.3,"AHST":77.0,"AHSmmT":60.0,"Nug":90.0};
+  static Map nug = student1.getPreviousSemester();
+  //int lengths = nug.length;
+
+  //print(lengths);
+  Widget build(BuildContext context) {
+    return ListView.builder(
+      itemCount: nug.length,
+      itemBuilder: (BuildContext context, int index){
+        String key = nug.keys.elementAt(index);
+        return new Container(
+            height: 50,
+            //color: Colors.amber[600],
+            child:Row(
+              children: <Widget>[
+                Card(
+
+                  child: Container(
+
+                    height: 49,
+                    width: 300,
+                    decoration: new BoxDecoration(
+                        color: changeGpaColor(nug[key]).color,
+                        borderRadius: new BorderRadius.only(
+                            topLeft:  const  Radius.circular(15.0),
+                            topRight: const  Radius.circular(15.0),
+                            bottomRight: const  Radius.circular(15.0),
+                            bottomLeft: const  Radius.circular(15.0))
+                    ),
+
+                    //color: Colors.grey,myBgColors[1].color,
+                    child: Padding(
+                      padding:EdgeInsets.fromLTRB(20, 0, 0, 0),
+                      child: Text(
+                        key,
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                    alignment: Alignment(-1.0, 0.0),
+                  ),
+                ),
+                Card(
+                  child: Container(
+                    height: 49,
+                    width: 75,
+
+                    color: changeGpaColor(nug[key]).color,
+                    child: Text(
+                      nug[key].toString(),
+                    ),
+                    alignment: Alignment(0.0, 0.0),
+                  ),
+                ),
+              ],
+            ));
+      },
+    );
+  }
+}
+
+class _MyColor {
+  const _MyColor(this.color, this.name);
+
+  final Color color;
+  final String name;
 }
