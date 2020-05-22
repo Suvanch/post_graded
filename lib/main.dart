@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'studentObject.dart';
+import 'add_new_semester.dart';
+
 
 /*
 I need to figure out how to update cumulative gpa as the sutdent removes
@@ -9,164 +11,197 @@ The text is in MyApp and the is change is made in previousSemesterListView
 they are in different classes
 */
 
-
-
-
 //public variables
 studentObject student1 = new studentObject();
-double currentGpa = student1.getCurrentGPA();
-double cummulGpa = student1.getCumulativeGpa();
+
 //main file runs graded app
-void main() => runApp(gradedApp());
+void main() => runApp(MaterialApp(home: gradedApp()));
 
 //only runs one class but it could run more
 class gradedApp extends StatefulWidget {
+  gradedApp({Key key, @required student1}) : super(key: key);
   @override
-  State<StatefulWidget> createState() {
-    return MyApp();
+  State<StatefulWidget> createState() =>MyApp(student1);
+
+}
+/*
+class MyApp  extends State<gradedApp>{
+  @override
+  Widget build(BuildContext context){
+    return new MaterialApp(
+      home: HomeScreen());
   }
 }
-
+ */
 //the actual app so far
-class MyApp extends State<gradedApp> {
+class MyApp  extends State<gradedApp> {
   //changes cumulative gpa
-  void _changeCumulativeGpa() {
-    setState(() => cummulGpa);
+  double currentGpa = student1.getCurrentGPA();
+  String cummulGpa = student1.getCumulativeGpa().toString();
+  MyApp(student1);
+  callback(newCummulGpa) {
+    setState(() {
+      cummulGpa = newCummulGpa;
+    });
   }
 
   //UI
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      //title bar on top
-      home: Scaffold(
-        appBar: AppBar(
-          title: Center(
-            child: Text('GradedApp'),
+    return Container(
+      child: new Scaffold(
+          appBar: AppBar(
+            title: Center(
+              child: Row(children: [Icon(
+                Icons.dehaze,
+                color: Colors.white,
+              ),Padding(padding: EdgeInsets.fromLTRB(110.0, 0.0, 0.0, 0.0),child: Text("GradedApp"))]),
+            ),
           ),
-        ),
-        //rest of the body
-        body: Column(
-          children: <Widget>[
-            //an attept to center the title row
-            //spoiler doesnt work
-            Center(
-              //current semester title with button
-              child: Row(
+          //rest of the body
+          body: Column(
+            children: <Widget>[
+              //an attept to center the title row
+              //spoiler doesnt work
+              Center(
+                //current semester title with button
+                child: Row(
+                  children: <Widget>[
+                    //the title
+                    Container(
+                      child: Padding(
+                        padding: EdgeInsets.fromLTRB(10.0, 0.0, 125.0, 0.0),
+                        child: Text(
+                          "Current Semester",
+                          textAlign: TextAlign.center,
+                          textScaleFactor: 2,
+                        ),
+                      ),
+                    ),
+                    //the button
+                    IconButton(
+                      icon: Icon(
+                          appBarIcons(title: 'Refresh', icon: Icons.autorenew)
+                              .icon),
+                      onPressed: () {
+                        print("ye i clicke it");
+                      },
+                    ),
+                  ],
+                ),
+              ),
+              //the current semester listview
+              Expanded(child: currentSemesterListView()),
+              //the title for previous semesters
+              //properly centered
+              //I still have to add a button to create new semester
+              Center(
+                child: Row(
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.fromLTRB(10.0, 0.0, 110.0, 0.0),
+                      child: Text(
+                        "Previous Semester",
+                        textAlign: TextAlign.center,
+                        textScaleFactor: 2,
+                      ),
+                    ),
+                    IconButton(
+                      icon: Icon(
+                          appBarIcons(title: 'AddSemester', icon: Icons.add)
+                              .icon),
+                      onPressed: () {
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => addNewSemester(student1:student1)));
+                      },
+                    ),
+                  ],
+                ),
+              ),
+              //the previouse semester listview
+              Expanded(child: previousSemesterListView(cummulGpa, callback)),
+              //holds all the gpa's on the bottom
+              Row(
                 children: <Widget>[
-                  //the title
-                  Container(
-                    child: Text(
-                      "Current Semester",
-                      textAlign: TextAlign.center,
-                      textScaleFactor: 2,
+                  //box for cummulative gpa
+                  Card(
+                    child: Container(
+                      //rounding of the boxes
+                      decoration: new BoxDecoration(
+                          color: Colors.blueAccent,
+                          borderRadius:
+                              new BorderRadius.all(Radius.circular(30))),
+                      width: 190,
+                      //the title text with padding to move the text arround for fun
+                      child: Column(
+                        children: <Widget>[
+                          Padding(
+                            padding: EdgeInsets.fromLTRB(32.0, 0.0, 32.0, 0.0),
+                            child: Text(
+                              "Cumulative GPA",
+                              textScaleFactor: 1.5,
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                          //the gpa text with padding to move the text arround for fun
+                          Padding(
+                            padding: EdgeInsets.fromLTRB(35.0, 0.0, 32.0, 16.0),
+                            child: Text(
+                              cummulGpa.toString(),
+                              textScaleFactor: 2.0,
+                            ),
+                          )
+                        ],
+                      ),
                     ),
                   ),
-                  //the button
-                  IconButton(
-                    icon: Icon(
-                        appBarIcons(title: 'Refresh', icon: Icons.autorenew)
-                            .icon),
-                    onPressed: () {
-                      print("ye i clicke it");
-                    },
+                  //same as the card before
+                  Card(
+                    child: Container(
+                      decoration: new BoxDecoration(
+                          color: Colors.blueAccent,
+                          borderRadius:
+                              new BorderRadius.all(Radius.circular(30))),
+                      width: 190,
+                      height: 100,
+                      child: Column(
+                        children: <Widget>[
+                          Padding(
+                            padding: EdgeInsets.fromLTRB(25.0, 20.0, 32.0, 0.0),
+                            child: Text(
+                              " Current GPA ",
+                              textScaleFactor: 1.5,
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.fromLTRB(30.0, 0.0, 32.0, 16.0),
+                            child: Text(
+                              currentGpa.toString(),
+                              textScaleFactor: 2.0,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
                 ],
-              ),
-            ),
-            //the current semester listview
-            Expanded(child: currentSemesterListView()),
-            //the title for previous semesters
-            //properly centered
-            //I still have to add a button to create new semester
-            Center(
-              child: Text(
-                "Previous Semester",
-                textAlign: TextAlign.center,
-                textScaleFactor: 2,
-              ),
-            ),
-            //the previouse semester listview
-            Expanded(child: previousSemesterListView()),
-            //holds all the gpa's on the bottom
-            Row(
-              children: <Widget>[
-                //box for cummulative gpa
-                Card(
-                  child: Container(
-                    //rounding of the boxes
-                    decoration: new BoxDecoration(
-                        color: Colors.blueAccent,
-                        borderRadius:
-                            new BorderRadius.all(Radius.circular(30))),
-                    width: 190,
-                    //the title text with padding to move the text arround for fun
-                    child: Column(
-                      children: <Widget>[
-                        Padding(
-                          padding: EdgeInsets.fromLTRB(32.0, 0.0, 32.0, 0.0),
-                          child: Text(
-                            "Cumulative GPA",
-                            textScaleFactor: 1.5,
-                            textAlign: TextAlign.center,
-                          ),
-                        ),
-                        //the gpa text with padding to move the text arround for fun
-                        Padding(
-                          padding: EdgeInsets.fromLTRB(35.0, 0.0, 32.0, 16.0),
-                          child: Text(
-                            cummulGpa.toString(),
-                            textScaleFactor: 2.0,
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-                //same as the card before
-                Card(
-                  child: Container(
-                    decoration: new BoxDecoration(
-                        color: Colors.blueAccent,
-                        borderRadius:
-                            new BorderRadius.all(Radius.circular(30))),
-                    width: 190,
-                    height: 100,
-                    child: Column(
-                      children: <Widget>[
-                        Padding(
-                          padding: EdgeInsets.fromLTRB(0.0, 0.0, 32.0, 0.0),
-                          child: Text(
-                            " Current GPA ",
-                            textScaleFactor: 1.5,
-                            textAlign: TextAlign.center,
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.fromLTRB(30.0, 0.0, 32.0, 16.0),
-                          child: Text(
-                            currentGpa.toString(),
-                            textScaleFactor: 2.0,
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-              ],
-            )
-          ],
-        ),
+              )
+            ],
+          ),
+
       ),
     );
   }
 }
+
 //I think this is useless but im not sure
 class appBarIcons {
   const appBarIcons({this.title, this.icon});
   final String title;
   final IconData icon;
 }
+
 //the list view for the current semester
 class currentSemesterListView extends StatelessWidget {
   @override
@@ -218,6 +253,7 @@ class currentSemesterListView extends StatelessWidget {
                     //color: changeGradeColor(nug[key]).color,
                     child: Text(
                       nug[key].toString(),
+                      style: TextStyle(fontWeight: FontWeight.bold),
                     ),
                     alignment: Alignment(0.0, 0.0),
                   ),
@@ -231,46 +267,62 @@ class currentSemesterListView extends StatelessWidget {
   }
 }
 
-class previousSemesterListView extends StatelessWidget {
+class previousSemesterListView extends StatefulWidget {
+  String cummulGpa;
+  Function(String) callback;
+  previousSemesterListView(this.cummulGpa, this.callback);
+
+  @override
+  _previousSemesterListViewState createState() =>
+      new _previousSemesterListViewState();
+}
+
+class _previousSemesterListViewState extends State<previousSemesterListView> {
   @override
   static Map nug = student1.getPreviousSemester();
 
   //print(lengths);
   Widget build(BuildContext context) {
     return ListView.builder(
-      itemCount: nug.length,
+      itemCount: student1.getPreviousSemester().length,
       itemBuilder: (BuildContext context, int index) {
-        String key = nug.keys.elementAt(index);
+        String key = student1.getPreviousSemester().keys.elementAt(index);
         return Dismissible(
           key: new Key(key),
           onDismissed: (direction) {
-            nug.remove(key);
-            Scaffold.of(context).showSnackBar(
-                new SnackBar(content: new Text("Removed Semester")));
-
+            student1.removeSemester(key);
+            //student1.getPreviousSemester().remove(key);
+            //print(student1.getPreviousSemester());
+            //Scaffold.of(context).showSnackBar(
+            //new SnackBar(content: new Text("Removed Semester")));
+            widget.callback(student1.getCumulativeGpa().toString());
           },
           background: Container(
             alignment: AlignmentDirectional.centerEnd,
             color: Colors.red,
-            child: Icon(Icons.delete,color: Colors.white,),
+            child: Icon(
+              Icons.delete,
+              color: Colors.white,
+            ),
           ),
           direction: DismissDirection.endToStart,
           child: Container(
             height: 50,
             decoration: new BoxDecoration(
-              color: changeGpaColor(nug[key]).color,
+              color: changeGpaColor(student1.getPreviousSemester()[key]).color,
               borderRadius: new BorderRadius.all(Radius.circular(15.0)),
             ),
             //color: Colors.amber[600],
             child: Card(
-              color: changeGpaColor(nug[key]).color,
+              color: changeGpaColor(student1.getPreviousSemester()[key]).color,
               child: Row(
                 children: <Widget>[
                   Card(
                     child: Container(
                       height: 49,
                       width: 300,
-                      color: changeGpaColor(nug[key]).color,
+                      color: changeGpaColor(student1.getPreviousSemester()[key])
+                          .color,
                       child: Padding(
                         padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
                         child: Text(
@@ -285,9 +337,11 @@ class previousSemesterListView extends StatelessWidget {
                     child: Container(
                       height: 49,
                       width: 75,
-                      color: changeGpaColor(nug[key]).color,
+                      color: changeGpaColor(student1.getPreviousSemester()[key])
+                          .color,
                       child: Text(
-                        nug[key].toString(),
+                        student1.getPreviousSemester()[key].toString(),
+                        style: TextStyle(fontWeight: FontWeight.bold),
                       ),
                       alignment: Alignment(0.0, 0.0),
                     ),
@@ -329,6 +383,7 @@ _MyColor changeGradeColor(double grade) {
     return myBgColors[4];
   }
 }
+
 //changes the colors for the previous semester
 _MyColor changeGpaColor(double grade) {
   const List<_MyColor> myBgColors = const <_MyColor>[
@@ -348,6 +403,3 @@ _MyColor changeGpaColor(double grade) {
     return myBgColors[4];
   }
 }
-
-
-

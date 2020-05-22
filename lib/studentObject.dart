@@ -76,6 +76,7 @@ class studentObject{
     return this.cumulativeGPA;
   }
   void calcCumulativeGpa(){
+
      int length = semesters.length;
      double totalCreditPoints = 0;
      int totalCredits =0;
@@ -85,12 +86,20 @@ class studentObject{
        totalCredits += semesters[i].getCredits();
       }
 
-      cumulativeGPA = totalCreditPoints/totalCredits;
+      cumulativeGPA = double.parse((totalCreditPoints/totalCredits).toStringAsFixed(4));
      }
      else{
        cumulativeGPA = -1;
      }
 
+  }
+  void removeSemester(String name){
+    previousSemester.remove(name);
+    for(int i=0;i<semesters.length;i++){
+      if(semesters[i].getName() == name){
+        semesters.removeAt(i);
+      }
+    }
   }
   Map<String,double>getPreviousSemester(){
     return previousSemester;
@@ -127,6 +136,9 @@ class semesterObject{
   }
   int getCredits(){
     return credits;
+  }
+  String getName(){
+    return name;
   }
 
 }
