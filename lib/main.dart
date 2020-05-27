@@ -224,12 +224,12 @@ class currentSemesterListView extends StatelessWidget {
           child: Container(
             //rounded edges
             decoration: new BoxDecoration(
-                color: changeGradeColor(student1.getCurrentSemester()[key]).color,
+                color: changeGradeColor(student1.getCurrentSemester()[key].grade).color,
                 borderRadius: new BorderRadius.all(Radius.circular(15))),
             height: 50,
             //color: Colors.amber[600],
             child: Card(
-              color: changeGradeColor(student1.getCurrentSemester()[key]).color,
+              color: changeGradeColor(student1.getCurrentSemester()[key].grade).color,
               child: Row(
                 children: <Widget>[
                   //for the name
@@ -237,7 +237,7 @@ class currentSemesterListView extends StatelessWidget {
                     child: Container(
                       height: 49,
                       width: 300,
-                      color: changeGradeColor(student1.getCurrentSemester()[key]).color,
+                      color: changeGradeColor(student1.getCurrentSemester()[key].grade).color,
                       child: Padding(
                         padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
                         child: Text(
@@ -253,9 +253,9 @@ class currentSemesterListView extends StatelessWidget {
                     child: Container(
                       height: 49,
                       width: 75,
-                      color: changeGradeColor(student1.getCurrentSemester()[key]).color,
+                      color: changeGradeColor(student1.getCurrentSemester()[key].grade).color,
                       child: Text(
-                        student1.getCurrentSemester()[key].toString(),
+                        student1.getCurrentSemester()[key].grade.toString(),
                         style: TextStyle(fontWeight: FontWeight.bold),
                       ),
                       alignment: Alignment(0.0, 0.0),
@@ -317,19 +317,19 @@ class _previousSemesterListViewState extends State<previousSemesterListView> {
           child: Container(
             height: 50,
             decoration: new BoxDecoration(
-              color: changeGpaColor(student1.getPreviousSemester()[key]).color,
+              color: changeGpaColor(student1.getPreviousSemester()[key].gpa).color,
               borderRadius: new BorderRadius.all(Radius.circular(15.0)),
             ),
             //color: Colors.amber[600],
             child: Card(
-              color: changeGpaColor(student1.getPreviousSemester()[key]).color,
+              color: changeGpaColor(student1.getPreviousSemester()[key].gpa).color,
               child: Row(
                 children: <Widget>[
                   Card(
                     child: Container(
                       height: 49,
                       width: 300,
-                      color: changeGpaColor(student1.getPreviousSemester()[key])
+                      color: changeGpaColor(student1.getPreviousSemester()[key].gpa)
                           .color,
                       child: Padding(
                         padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
@@ -345,10 +345,10 @@ class _previousSemesterListViewState extends State<previousSemesterListView> {
                     child: Container(
                       height: 49,
                       width: 75,
-                      color: changeGpaColor(student1.getPreviousSemester()[key])
+                      color: changeGpaColor(student1.getPreviousSemester()[key].gpa)
                           .color,
                       child: Text(
-                        student1.getPreviousSemester()[key].toString(),
+                        student1.getPreviousSemester()[key].gpa.toString(),
                         style: TextStyle(fontWeight: FontWeight.bold),
                       ),
                       alignment: Alignment(0.0, 0.0),

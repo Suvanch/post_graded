@@ -6,34 +6,28 @@ class studentObject{
   double totalGPAPoints;
   double cumulativeGPA;
   double totalSemesterCredits = 0;
-  List classes = new List<classObject>();
   List semesters  = new List<semesterObject>();
-  Map<String,double> currentSemester = new Map<String, double>();
-  Map<String,double> previousSemester = new Map<String, double>();
+  Map<String,classObject> currentSemester = new Map<String, classObject>();
+  Map<String,semesterObject> previousSemester = new Map<String, semesterObject>();
 
    studentObject(){
      addData();
-     //print("dfadfasdasdasdasdasdsadas");
    }
    void addClass(String name, String teacher,String location,double grade,int credits){
-    classes.add(classObject(name,teacher,location,grade,credits));
-    currentSemester[name] = grade;
+    currentSemester[name] = classObject(name,teacher,location,grade,credits);
   }
    double getCurrentGPA(){
-    // print("---------------------------------------------------------------------------------------------------");
     calcCurrentGpa();
-    //print("---------------------------------------------------------------------------------------------------");
     return this.currentGPA;
   }
    void calcCurrentGpa(){
-    // print("---------------------------------------------------------------------------------------------------");
     int totalCredits = 0;
-    if (classes.length == 0) {
+    if (currentSemester.length == 0) {
       this.totalCredits = -1;
     }
     else {
-      for (int i = 0; i < classes.length; i++) {
-        totalCredits += classes[i].credits;
+      for (var k in currentSemester.keys) {
+        totalCredits += currentSemester[k].credits;
       }
     }
      //print("1");
@@ -42,51 +36,39 @@ class studentObject{
     } else {
       this.totalCredits = -1;
     }
-     //print("---------------------------------------------------------------------------------------------------");
     double totalPoints=0;
-    if (classes.length == 0) {
+    if (currentSemester.length == 0) {
       this.totalGPAPoints = -1;
       //print("error");
     }
     else {
-      //
-      for (int i = 0; i < classes.length; i++) {
-        //print(i);
-       // print(classes.length);
-        //System.out.println("gpaPoints: " + classes.get(i).getGPAPoints());
-        totalPoints += classes[i].getGPAPoints();
-        //print(totalPoints);
+      for (var k in currentSemester.keys) {
+        totalPoints += currentSemester[k].getGPAPoints();
       }
     }
-     //print("---------------------------------------------------------------------------------------------------");
     if (totalPoints >= 0) {
       this.totalGPAPoints = totalPoints;
     }
     else {
       this.totalGPAPoints = -1;
     }
-     //print("---------------------------------------------------------------------------------------------------");
-    //System.out.println(totalGPAPoints);
-    //System.out.println(totalCredits);
+
     this.currentGPA =double.parse((totalGPAPoints/totalCredits).toStringAsFixed(4));
-    //print(this.currentGPA);
-     //print("---------------------------------------------------------------------------------------------------");
+
   }
-   Map<String,double>getCurrentSemester(){
+   Map<String,classObject>getCurrentSemester(){
      return currentSemester;
   }
    classObject getClass(String name){
-      for(int i=0;i<classes.length;i++){
-        if(classes[i].name == name){
-          return classes[i];
-        }
+     for (var k in currentSemester.keys) {
+       if(k == name){
+         return currentSemester[k];
+     }
       }
       return null;
    }
   void addSemester(String name,double grade,int credits){
-    previousSemester[name] = grade;
-    semesterObject xx = new semesterObject(name, grade, credits);
-    semesters.add(xx);
+    previousSemester[name] = new semesterObject(name, grade, credits);
   }
   double getCumulativeGpa(){
     calcCumulativeGpa();
@@ -94,14 +76,16 @@ class studentObject{
   }
   void calcCumulativeGpa(){
 
-     int length = semesters.length;
+     int length = previousSemester.length;
      double totalCreditPoints = 0;
      int totalCredits =0;
      if(length > 0){
-       for(int i=0;i<length;i++){
-       totalCreditPoints += semesters[i].getCreditPoints();
-       totalCredits += semesters[i].credits;
-      }
+
+       for (var k in previousSemester.keys) {
+         totalCreditPoints += previousSemester[k].getCreditPoints();
+         totalCredits += previousSemester[k].credits;
+       }
+
 
       cumulativeGPA = double.parse((totalCreditPoints/totalCredits).toStringAsFixed(4));
      }
@@ -112,13 +96,8 @@ class studentObject{
   }
   void removeSemester(String name){
     previousSemester.remove(name);
-    for(int i=0;i<semesters.length;i++){
-      if(semesters[i].getName() == name){
-        semesters.removeAt(i);
-      }
-    }
   }
-  Map<String,double>getPreviousSemester(){
+  Map<String,semesterObject>getPreviousSemester(){
     return previousSemester;
   }
   void addData(){
@@ -131,12 +110,12 @@ class studentObject{
     this.addSemester("2sem",3.0,25);
     this.addSemester("3sem",2.0,35);
     this.addSemester("4sem",1.0,55);
-    this.classes[0].addDistribution("major",50.0);
-    this.classes[0].addDistribution("minor",30.0);
-    this.classes[0].addDistribution("daily",20.0);
+    this.currentSemester["CS1337"].addDistribution("major",50.0);
+    this.currentSemester["CS1337"].addDistribution("minor",30.0);
+    this.currentSemester["CS1337"].addDistribution("daily",10.0);
     //you have to add + 0.0 it causes some stupid problem
-    this.classes[0].distribution["major"].addAssignments("test1",33+0.0);
-   // this.classes[0].distribution["minor"].addAssignments("quiz1",33+0.0);
+    this.currentSemester["CS1337"].distribution["major"].addAssignments("test1",100+0.0);
+    this.currentSemester["CS1337"].distribution["minor"].addAssignments("quiz1",100+0.0);
   }
 
 }
@@ -194,19 +173,11 @@ class classObject{
     }
     return null;
 
-    /*
-    distribution.forEach((k,v) {
-      if(k==name){
-        return distribution[k];
-      }
-    });
-     */
 
   }
   void addDistribution(String name, double percent){
     distribution[name] = new distributionObject(percent);
   }
-
   double getGPAPoints(){
     calcGrade();
     calcGPAPoints();
@@ -280,13 +251,9 @@ class distributionObject{
     this.weight = weight;
   }
     double getWeight(){
-    //print("yeeeeee");
     return this.weight;
   }
    void addAssignments(String name, double percent){
-    //print("*******3  ");
-   // print(name);
-    //rint(percent);
     distributedGrades[name]=percent;
   }
    double getWeightAchived(){
