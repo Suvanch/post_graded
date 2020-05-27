@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'studentObject.dart';
 import 'add_new_semester.dart';
+import 'one_class.dart';
 
 
 /*
@@ -208,59 +209,66 @@ class currentSemesterListView extends StatelessWidget {
 
   //sets the student map to nug
   //its not neccssay and should be changes
-  static Map nug = student1.getCurrentSemester();
+
   //int lengths = nug.length;
 
   //adds the colums in the listview
   Widget build(BuildContext context) {
     return ListView.builder(
-      itemCount: nug.length,
+      itemCount: student1.getCurrentSemester().length,
       itemBuilder: (BuildContext context, int index) {
-        String key = nug.keys.elementAt(index);
+        
+        String key = student1.getCurrentSemester().keys.elementAt(index);
         //tells what each colum should look like
-        return Container(
-          //rounded edges
-          decoration: new BoxDecoration(
-              color: changeGradeColor(nug[key]).color,
-              borderRadius: new BorderRadius.all(Radius.circular(15))),
-          height: 50,
-          //color: Colors.amber[600],
-          child: Card(
-            color: changeGradeColor(nug[key]).color,
-            child: Row(
-              children: <Widget>[
-                //for the name
-                Card(
-                  child: Container(
-                    height: 49,
-                    width: 300,
-                    //color: Colors.grey,myBgColors[1].color,
-                    child: Padding(
-                      padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
+        return InkWell(
+          child: Container(
+            //rounded edges
+            decoration: new BoxDecoration(
+                color: changeGradeColor(student1.getCurrentSemester()[key]).color,
+                borderRadius: new BorderRadius.all(Radius.circular(15))),
+            height: 50,
+            //color: Colors.amber[600],
+            child: Card(
+              color: changeGradeColor(student1.getCurrentSemester()[key]).color,
+              child: Row(
+                children: <Widget>[
+                  //for the name
+                  Card(
+                    child: Container(
+                      height: 49,
+                      width: 300,
+                      color: changeGradeColor(student1.getCurrentSemester()[key]).color,
+                      child: Padding(
+                        padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
+                        child: Text(
+                          key,
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                      alignment: Alignment(-1.0, 0.0),
+                    ),
+                  ),
+                  //for the grade
+                  Card(
+                    child: Container(
+                      height: 49,
+                      width: 75,
+                      color: changeGradeColor(student1.getCurrentSemester()[key]).color,
                       child: Text(
-                        key,
+                        student1.getCurrentSemester()[key].toString(),
                         style: TextStyle(fontWeight: FontWeight.bold),
                       ),
+                      alignment: Alignment(0.0, 0.0),
                     ),
-                    alignment: Alignment(-1.0, 0.0),
                   ),
-                ),
-                //for the grade
-                Card(
-                  child: Container(
-                    height: 49,
-                    width: 75,
-                    //color: changeGradeColor(nug[key]).color,
-                    child: Text(
-                      nug[key].toString(),
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                    alignment: Alignment(0.0, 0.0),
-                  ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
+          onTap: (){
+            Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => oneClass(student1:student1,name:key)));
+          },
         );
       },
     );
