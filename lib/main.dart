@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:postgraded/settingsPage.dart';
 
 //void main() => runApp(gradedApp());
 
@@ -32,7 +33,8 @@ class gradedApp extends StatelessWidget {
                     icon: Icon(
                         appBarIcons(title: 'Car', icon: Icons.autorenew).icon),
                     onPressed: () {
-                      print("ye i clicke it");
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => settingsPage()));
+                      //Change back only for test
                     },
                   ),
                 ],
