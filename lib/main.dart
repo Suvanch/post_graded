@@ -1,23 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
-void main() => runApp(gradedApp());
+//void main() => runApp(gradedApp());
 
-class gradedApp extends StatefulWidget {
+class gradedApp extends StatelessWidget {
   @override
-  State<StatefulWidget> createState() {
-    return MyApp();
-  }
-  //MyApp createState() => MyApp();
-}
-
-void changeText() {}
-
-class MyApp extends State<gradedApp> {
   double currentGpa = 4.0;
   double cummulGpa = 4.0;
   Map<String, double> map1 = {'Cs1337': 99.3 , 'Math 2414': 90.3, 'Nah U goog': 69.69};
-  @override
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
@@ -216,6 +206,7 @@ class MyApp extends State<gradedApp> {
       ),
     );
   }
+  //MyApp createState() => MyApp();
 }
 
 class appBarIcons {
