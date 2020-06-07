@@ -2,24 +2,30 @@ import 'package:flutter/material.dart';
 import 'studentObject.dart';
 import 'main.dart';
 
-class addNewSemester extends StatefulWidget {
-  studentObject student1;
-  addNewSemester({Key key, @required this.student1}) : super(key: key);
-  @override
-  _addNewSemester createState() => _addNewSemester(student1);
-}
 
-class _addNewSemester extends State<addNewSemester> {
+//needs to check if name doesent alredy exist
+//add snack bar when feilds are left blank
+
+class addNewDistribution extends StatefulWidget {
   studentObject student1;
   String name;
-  double gpa;
-  int credits;
-  _addNewSemester(this.student1);
+  addNewDistribution({Key key, @required this.student1,@required this.name}) : super(key: key);
+  @override
+  _addNewDistribution createState() => _addNewDistribution(student1,name);
+}
+
+class _addNewDistribution extends State<addNewDistribution> {
+  String className;
+  studentObject student1;
+  String name;
+  //percent of total grade
+  double POG;
+  _addNewDistribution(this.student1,this.className);
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
       appBar: AppBar(
-        title: Text("Add Semester"),
+        title: Text("Add Distribution"),
       ),
       body: Center(
         child: SingleChildScrollView(
@@ -29,56 +35,7 @@ class _addNewSemester extends State<addNewSemester> {
               Padding(
                 padding: EdgeInsets.fromLTRB(0.0, 30.0, 0.0, 0.0),
                 child: Text(
-                  "Semester Name",
-                  style: TextStyle(fontSize: 20),
-                ),
-              ),
-              Container(
-                height: 50,
-                width: 300,
-                child: Padding(
-                  padding: EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 0.0),
-                  child: Card(
-                    color: Colors.grey,
-                      child: TextField(
-                        autofocus: false,
-                        keyboardType: TextInputType.emailAddress,
-                        onChanged: (text){
-                          name = text;
-                        },
-                      ),
-
-                  ),
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.fromLTRB(0.0, 30.0, 0.0, 0.0),
-                child: Text(
-                  "GPA",
-                  style: TextStyle(fontSize: 20),
-                ),
-              ),
-              Container(
-                height: 50,
-                width: 300,
-                child: Padding(
-                  padding: EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 0.0),
-                  child: Card(
-                    color: Colors.grey,
-                      child: TextField(
-                        autofocus: false,
-                        keyboardType: TextInputType.numberWithOptions(signed:false,decimal: true),
-                        onChanged: (text){
-                          gpa = double.parse(text);
-                        },
-                      ),
-                  ),
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.fromLTRB(0.0, 30.0, 0.0, 0.0),
-                child: Text(
-                  "Credits Earned",
+                  "Distribution Name",
                   style: TextStyle(fontSize: 20),
                 ),
               ),
@@ -90,13 +47,37 @@ class _addNewSemester extends State<addNewSemester> {
                   child: Card(
                     color: Colors.grey,
                     child: TextField(
-                        autofocus: false,
-                        keyboardType: TextInputType.number,
-                        onChanged: (text){
-                          credits = int.parse(text);
-                        },
-                      ),
+                      autofocus: false,
+                      keyboardType: TextInputType.emailAddress,
+                      onChanged: (text){
+                        name = text;
+                      },
+                    ),
 
+                  ),
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.fromLTRB(0.0, 30.0, 0.0, 0.0),
+                child: Text(
+                  "Percent of Total Grade",
+                  style: TextStyle(fontSize: 20),
+                ),
+              ),
+              Container(
+                height: 50,
+                width: 300,
+                child: Padding(
+                  padding: EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 0.0),
+                  child: Card(
+                    color: Colors.grey,
+                    child: TextField(
+                      autofocus: false,
+                      keyboardType: TextInputType.numberWithOptions(signed:false,decimal: true),
+                      onChanged: (text){
+                        POG = double.parse(text);
+                      },
+                    ),
                   ),
                 ),
               ),
@@ -114,12 +95,12 @@ class _addNewSemester extends State<addNewSemester> {
                       padding: EdgeInsets.all(10.0),
                       child: Column( // Replace with a Row for horizontal icon + text
                         children: <Widget>[
-                          Text("Add Semester")
+                          Text("Add Distribution")
                         ],
                       ),
                       onPressed: () {
-                        if(name != null && gpa != null && credits != null){
-                          student1.addSemester(name, gpa, credits);
+                        if(name != null && POG != null){
+                          student1.currentSemester[className].addDistribution(name,POG);
                           Navigator.of(context).push(MaterialPageRoute(
                               builder: (context) => gradedApp(student1:student1)));
                         }
@@ -141,9 +122,4 @@ class _addNewSemester extends State<addNewSemester> {
       ),
     );
   }
-}
-class appBarIcons {
-  const appBarIcons({this.title, this.icon});
-  final String title;
-  final IconData icon;
 }

@@ -112,10 +112,22 @@ class studentObject{
     this.addSemester("4sem",1.0,55);
     this.currentSemester["CS1337"].addDistribution("major",50.0);
     this.currentSemester["CS1337"].addDistribution("minor",30.0);
-    this.currentSemester["CS1337"].addDistribution("daily",10.0);
+    this.currentSemester["CS1337"].addDistribution("daily",20.0);
     //you have to add + 0.0 it causes some stupid problem
     this.currentSemester["CS1337"].distribution["major"].addAssignments("test1",100+0.0);
-    this.currentSemester["CS1337"].distribution["minor"].addAssignments("quiz1",100+0.0);
+    this.currentSemester["CS1337"].distribution["major"].addAssignments("test2",80+0.0);
+    this.currentSemester["CS1337"].distribution["major"].addAssignments("test3",70+0.0);
+    this.currentSemester["CS1337"].distribution["major"].addAssignments("test4",60+0.0);
+    this.currentSemester["CS1337"].distribution["minor"].addAssignments("quiz1",90+0.0);
+    this.currentSemester["CS1337"].distribution["minor"].addAssignments("quiz2",80+0.0);
+    this.currentSemester["CS1337"].distribution["minor"].addAssignments("quiz3",70+0.0);
+    this.currentSemester["CS1337"].distribution["minor"].addAssignments("quiz4",60+0.0);
+    this.currentSemester["CS1337"].distribution["daily"].addAssignments("quiz1",90+0.0);
+    this.currentSemester["CS1337"].distribution["daily"].addAssignments("quiz2",80+0.0);
+    this.currentSemester["CS1337"].distribution["daily"].addAssignments("quiz3",70+0.0);
+    this.currentSemester["CS1337"].distribution["daily"].addAssignments("quiz4",60+0.0);
+   // this.currentSemester["CS1337"].addDistribution("dd", 15.0);
+
   }
 
 }
@@ -162,10 +174,10 @@ class classObject{
     this.location = location;
     this.grade = grade;
     this.credits = credits;
-    //distribution["Unsigned"]=distributionObject(100);
+    distribution["Unsigned"]=distributionObject(0);
   }
   distributionObject getDistribution(String name){
-    print(distribution[name]);
+    //print(distribution[name]);
     for (var k in distribution.keys) {
       if(k==name){
         return distribution[k];
@@ -176,7 +188,24 @@ class classObject{
 
   }
   void addDistribution(String name, double percent){
+    //print("hi");
     distribution[name] = new distributionObject(percent);
+    //print("gm");
+  }
+  void deleteDistribution(String name){
+    if(distribution.containsKey(name)&&name != "Unsigned" ){
+      for (var k in distribution[name].distributedGrades.keys) {
+        double p = distribution[name].distributedGrades[k];
+        distribution["Unsigned"].addAssignments(k,p);
+      }
+      distribution.remove(name);
+    }
+  }
+  void moveGrade(String oldDistributionName,String newDistributionName, String assignmentName){
+    double percent;
+    percent = distribution[oldDistributionName].distributedGrades[assignmentName];
+    distribution[oldDistributionName].distributedGrades.remove(assignmentName);
+    distribution[newDistributionName].distributedGrades[assignmentName] = percent;
   }
   double getGPAPoints(){
     calcGrade();

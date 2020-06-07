@@ -133,6 +133,7 @@ class MyApp  extends State<gradedApp> {
                           borderRadius:
                               new BorderRadius.all(Radius.circular(30))),
                       width: 190,
+                      height: 100,
                       //the title text with padding to move the text arround for fun
                       child: Column(
                         children: <Widget>[
@@ -381,11 +382,11 @@ _MyColor changeGradeColor(double grade) {
     const _MyColor(const Color(0xFFFFFF00), 'Yellow'),
     const _MyColor(const Color(0xFFFF1744), 'Red'),
   ];
-  if (grade > 90) {
+  if (grade >= 90) {
     return myBgColors[1];
-  } else if (grade > 80) {
+  } else if (grade >= 80) {
     return myBgColors[2];
-  } else if (grade > 70) {
+  } else if (grade >= 70) {
     return myBgColors[3];
   } else {
     return myBgColors[4];
