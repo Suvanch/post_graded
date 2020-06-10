@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:postgraded/settingsPage.dart';
 import 'studentObject.dart';
 import 'add_new_semester.dart';
 import 'one_class.dart';
@@ -363,6 +364,7 @@ class _previousSemesterListViewState extends State<previousSemesterListView> {
       },
     );
   }
+  //MyApp createState() => MyApp();
 }
 
 //the color class helps chose ccolors but i dont know what it does
