@@ -1,219 +1,416 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:postgraded/settingsPage.dart';
+import 'studentObject.dart';
+import 'add_new_semester.dart';
+import 'one_class.dart';
 
-//void main() => runApp(gradedApp());
 
-class gradedApp extends StatelessWidget {
+/*
+I need to figure out how to update cumulative gpa as the sutdent removes
+it from the list
+The text is in MyApp and the is change is made in previousSemesterListView
+they are in different classes
+*/
+
+//public variables
+studentObject student1 = new studentObject();
+
+//main file runs graded app
+void main() => runApp(MaterialApp(home: gradedApp()));
+
+//only runs one class but it could run more
+class gradedApp extends StatefulWidget {
+  gradedApp({Key key, @required student1}) : super(key: key);
   @override
-  double currentGpa = 4.0;
-  double cummulGpa = 4.0;
-  Map<String, double> map1 = {'Cs1337': 99.3 , 'Math 2414': 90.3, 'Nah U goog': 69.69};
+  State<StatefulWidget> createState() =>MyApp(student1);
+
+}
+/*
+class MyApp  extends State<gradedApp>{
+  @override
+  Widget build(BuildContext context){
+    return new MaterialApp(
+      home: HomeScreen());
+  }
+}
+ */
+//the actual app so far
+class MyApp  extends State<gradedApp> {
+  //changes cumulative gpa
+  double currentGpa = student1.getCurrentGPA();
+  String cummulGpa = student1.getCumulativeGpa().toString();
+  MyApp(student1);
+  callback(newCummulGpa) {
+    setState(() {
+      cummulGpa = newCummulGpa;
+    });
+  }
+
+  //UI
+  @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(
-          title: Center(
-            child: Text('GradedApp'),
+    return Container(
+      child: new Scaffold(
+          appBar: AppBar(
+            title: Center(
+              child: Row(children: [Icon(
+                Icons.dehaze,
+                color: Colors.white,
+              ),Padding(padding: EdgeInsets.fromLTRB(110.0, 0.0, 0.0, 0.0),child: Text("GradedApp"))]),
+            ),
           ),
-        ),
-        body: Column(
-          children: <Widget>[
-            Center(
+          //rest of the body
+          body: Column(
+            children: <Widget>[
+              //an attept to center the title row
+              //spoiler doesnt work
+              Center(
+                //current semester title with button
+                child: Row(
+                  children: <Widget>[
+                    //the title
+                    Container(
+                      child: Padding(
+                        padding: EdgeInsets.fromLTRB(10.0, 0.0, 125.0, 0.0),
+                        child: Text(
+                          "Current Semester",
+                          textAlign: TextAlign.center,
+                          textScaleFactor: 2,
+                        ),
+                      ),
+                    ),
+                    //the button
+                    IconButton(
+                      icon: Icon(
+                          appBarIcons(title: 'Refresh', icon: Icons.autorenew)
+                              .icon),
+                      onPressed: () {
+                        print("ye i clicke it");
+                      },
+                    ),
+                  ],
+                ),
+              ),
+              //the current semester listview
+              Expanded(child: currentSemesterListView()),
+              //the title for previous semesters
+              //properly centered
+              //I still have to add a button to create new semester
+              Center(
+                child: Row(
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.fromLTRB(10.0, 0.0, 110.0, 0.0),
+                      child: Text(
+                        "Previous Semester",
+                        textAlign: TextAlign.center,
+                        textScaleFactor: 2,
+                      ),
+                    ),
+                    IconButton(
+                      icon: Icon(
+                          appBarIcons(title: 'AddSemester', icon: Icons.add)
+                              .icon),
+                      onPressed: () {
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => addNewSemester(student1:student1)));
+                      },
+                    ),
+                  ],
+                ),
+              ),
+              //the previouse semester listview
+              Expanded(child: previousSemesterListView(cummulGpa, callback)),
+              //holds all the gpa's on the bottom
+              Row(
+                children: <Widget>[
+                  //box for cummulative gpa
+                  Card(
+                    child: Container(
+                      //rounding of the boxes
+                      decoration: new BoxDecoration(
+                          color: Colors.blueAccent,
+                          borderRadius:
+                              new BorderRadius.all(Radius.circular(30))),
+                      width: 190,
+                      height: 100,
+                      //the title text with padding to move the text arround for fun
+                      child: Column(
+                        children: <Widget>[
+                          Padding(
+                            padding: EdgeInsets.fromLTRB(32.0, 0.0, 32.0, 0.0),
+                            child: Text(
+                              "Cumulative GPA",
+                              textScaleFactor: 1.5,
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                          //the gpa text with padding to move the text arround for fun
+                          Padding(
+                            padding: EdgeInsets.fromLTRB(35.0, 0.0, 32.0, 16.0),
+                            child: Text(
+                              cummulGpa.toString(),
+                              textScaleFactor: 2.0,
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
+                  //same as the card before
+                  Card(
+                    child: Container(
+                      decoration: new BoxDecoration(
+                          color: Colors.blueAccent,
+                          borderRadius:
+                              new BorderRadius.all(Radius.circular(30))),
+                      width: 190,
+                      height: 100,
+                      child: Column(
+                        children: <Widget>[
+                          Padding(
+                            padding: EdgeInsets.fromLTRB(25.0, 20.0, 32.0, 0.0),
+                            child: Text(
+                              " Current GPA ",
+                              textScaleFactor: 1.5,
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.fromLTRB(30.0, 0.0, 32.0, 16.0),
+                            child: Text(
+                              currentGpa.toString(),
+                              textScaleFactor: 2.0,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              )
+            ],
+          ),
+
+      ),
+    );
+  }
+}
+
+//I think this is useless but im not sure
+class appBarIcons {
+  const appBarIcons({this.title, this.icon});
+  final String title;
+  final IconData icon;
+}
+
+//the list view for the current semester
+class currentSemesterListView extends StatelessWidget {
+  @override
+
+  //sets the student map to nug
+  //its not neccssay and should be changes
+
+  //int lengths = nug.length;
+
+  //adds the colums in the listview
+  Widget build(BuildContext context) {
+    return ListView.builder(
+      itemCount: student1.getCurrentSemester().length,
+      itemBuilder: (BuildContext context, int index) {
+        
+        String key = student1.getCurrentSemester().keys.elementAt(index);
+        //tells what each colum should look like
+        return InkWell(
+          child: Container(
+            //rounded edges
+            decoration: new BoxDecoration(
+                color: changeGradeColor(student1.getCurrentSemester()[key].grade).color,
+                borderRadius: new BorderRadius.all(Radius.circular(15))),
+            height: 50,
+            //color: Colors.amber[600],
+            child: Card(
+              color: changeGradeColor(student1.getCurrentSemester()[key].grade).color,
               child: Row(
                 children: <Widget>[
-                  Container(
-                    child: Text(
-                      "Current Semester",
-                      textAlign: TextAlign.center,
-                      textScaleFactor: 2,
+                  //for the name
+                  Card(
+                    child: Container(
+                      height: 49,
+                      width: 300,
+                      color: changeGradeColor(student1.getCurrentSemester()[key].grade).color,
+                      child: Padding(
+                        padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
+                        child: Text(
+                          key,
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                      alignment: Alignment(-1.0, 0.0),
                     ),
                   ),
-                  IconButton(
-                    icon: Icon(
-                        appBarIcons(title: 'Car', icon: Icons.autorenew).icon),
-                    onPressed: () {
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => settingsPage()));
-                      //Change back only for test
-                    },
+                  //for the grade
+                  Card(
+                    child: Container(
+                      height: 49,
+                      width: 75,
+                      color: changeGradeColor(student1.getCurrentSemester()[key].grade).color,
+                      child: Text(
+                        student1.getCurrentSemester()[key].grade.toString(),
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      alignment: Alignment(0.0, 0.0),
+                    ),
                   ),
                 ],
               ),
             ),
-            Expanded(
-              child: ListView(
-                padding: const EdgeInsets.all(8),
-                children: <Widget>[
-                  Container(
-                      height: 50,
-                      color: Colors.amber[600],
-                      //child:  Center(child: Text('Entry A')),
-                      child: Row(
-                        children: <Widget>[
-                          Card(
-                            child: Container(
-                              height: 49,
-                              width: 300,
-                              color: Colors.grey,
-                              child: Text(
-                                "dfdfdf",
-                                textAlign: TextAlign.center,
-                              ),
-                              alignment: Alignment(-1.0, 0.0),
-                            ),
-                          ),
-                          Card(
-                            child: Container(
-                              height: 49,
-                              width: 75,
-                              color: Colors.grey,
-                              child: Text(
-                                "99.5",
-                              ),
-                              alignment: Alignment(0.0, 0.0),
-                            ),
-                          ),
+          ),
+          onTap: (){
+            Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => oneClass(student1:student1,name:key)));
+          },
+        );
+      },
+    );
+  }
+}
 
-                        ],
-                      )),
-                  Container(
-                    height: 50,
-                    color: Colors.amber[600],
-                    child: const Center(child: Text('Entry A')),
-                  ),
-                  Container(
-                    height: 50,
-                    color: Colors.amber[600],
-                    child: const Center(child: Text('Entry A')),
-                  ),
-                  Container(
-                    height: 50,
-                    color: Colors.amber[600],
-                    child: const Center(child: Text('Entry A')),
-                  ),
-                  Container(
-                    height: 50,
-                    color: Colors.amber[500],
-                    child: const Center(child: Text('Entry B')),
-                  ),
-                  Container(
-                    height: 50,
-                    color: Colors.amber[100],
-                    child: const Center(child: Text('Entry C')),
-                  ),
-                ],
-              ),
+class previousSemesterListView extends StatefulWidget {
+  String cummulGpa;
+  Function(String) callback;
+  previousSemesterListView(this.cummulGpa, this.callback);
+
+  @override
+  _previousSemesterListViewState createState() =>
+      new _previousSemesterListViewState();
+}
+
+class _previousSemesterListViewState extends State<previousSemesterListView> {
+  @override
+  static Map nug = student1.getPreviousSemester();
+
+  //print(lengths);
+  Widget build(BuildContext context) {
+    return ListView.builder(
+      itemCount: student1.getPreviousSemester().length,
+      itemBuilder: (BuildContext context, int index) {
+        String key = student1.getPreviousSemester().keys.elementAt(index);
+        return Dismissible(
+          key: new Key(key),
+          onDismissed: (direction) {
+            student1.removeSemester(key);
+            //student1.getPreviousSemester().remove(key);
+            //print(student1.getPreviousSemester());
+            //Scaffold.of(context).showSnackBar(
+            //new SnackBar(content: new Text("Removed Semester")));
+            widget.callback(student1.getCumulativeGpa().toString());
+          },
+          background: Container(
+            alignment: AlignmentDirectional.centerEnd,
+            color: Colors.red,
+            child: Icon(
+              Icons.delete,
+              color: Colors.white,
             ),
-            Center(
-              child: Text(
-                "Previous Semester",
-                textAlign: TextAlign.center,
-                textScaleFactor: 2,
-              ),
+          ),
+          direction: DismissDirection.endToStart,
+          child: Container(
+            height: 50,
+            decoration: new BoxDecoration(
+              color: changeGpaColor(student1.getPreviousSemester()[key].gpa).color,
+              borderRadius: new BorderRadius.all(Radius.circular(15.0)),
             ),
-            Expanded(
-              child: ListView(
-                padding: const EdgeInsets.all(8),
+            //color: Colors.amber[600],
+            child: Card(
+              color: changeGpaColor(student1.getPreviousSemester()[key].gpa).color,
+              child: Row(
                 children: <Widget>[
-                  Container(
-                    height: 50,
-                    color: Colors.amber[600],
-                    child: const Center(child: Text('Entry A')),
+                  Card(
+                    child: Container(
+                      height: 49,
+                      width: 300,
+                      color: changeGpaColor(student1.getPreviousSemester()[key].gpa)
+                          .color,
+                      child: Padding(
+                        padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
+                        child: Text(
+                          key,
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                      alignment: Alignment(-1.0, 0.0),
+                    ),
                   ),
-                  Container(
-                    height: 50,
-                    color: Colors.amber[600],
-                    child: const Center(child: Text('Entry A')),
-                  ),
-                  Container(
-                    height: 50,
-                    color: Colors.amber[600],
-                    child: const Center(child: Text('Entry A')),
-                  ),
-                  Container(
-                    height: 50,
-                    color: Colors.amber[600],
-                    child: const Center(child: Text('Entry A')),
-                  ),
-                  Container(
-                    height: 50,
-                    color: Colors.amber[500],
-                    child: const Center(child: Text('Entry B')),
-                  ),
-                  Container(
-                    height: 50,
-                    color: Colors.amber[100],
-                    child: const Center(child: Text('Entry C')),
+                  Card(
+                    child: Container(
+                      height: 49,
+                      width: 75,
+                      color: changeGpaColor(student1.getPreviousSemester()[key].gpa)
+                          .color,
+                      child: Text(
+                        student1.getPreviousSemester()[key].gpa.toString(),
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      alignment: Alignment(0.0, 0.0),
+                    ),
                   ),
                 ],
               ),
             ),
-            Row(
-              children: <Widget>[
-                Card(
-                  child: Container(
-                    width: 190,
-                    color: Colors.grey,
-                    child: Column(
-                      children: <Widget>[
-                        Padding(
-                          padding: EdgeInsets.fromLTRB(32.0, 0.0, 32.0, 0.0),
-                          child: Text(
-                            "Cummulative GPA",
-                            textScaleFactor: 1.5,
-                            textAlign: TextAlign.center,
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.fromLTRB(35.0, 0.0, 32.0, 16.0),
-                          child: Text(
-                            cummulGpa.toString(),
-                            textScaleFactor: 2.0,
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-                Card(
-                  child: Container(
-                    width: 190,
-                    height: 100,
-                    color: Colors.grey,
-                    child: Column(
-                      children: <Widget>[
-                        Padding(
-                          padding: EdgeInsets.fromLTRB(0.0, 0.0, 32.0, 0.0),
-                          child: Text(
-                            " Current GPA ",
-                            textScaleFactor: 1.5,
-                            textAlign: TextAlign.center,
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.fromLTRB(30.0, 0.0, 32.0, 16.0),
-                          child: Text(
-                            currentGpa.toString(),
-                            textScaleFactor: 2.0,
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-              ],
-            )
-          ],
-        ),
-      ),
+          ),
+        );
+      },
     );
   }
   //MyApp createState() => MyApp();
 }
 
-class appBarIcons {
-  const appBarIcons({this.title, this.icon});
+//the color class helps chose ccolors but i dont know what it does
+class _MyColor {
+  const _MyColor(this.color, this.name);
 
-  final String title;
-  final IconData icon;
+  final Color color;
+  final String name;
+}
+
+//changes the colors for the current semester
+_MyColor changeGradeColor(double grade) {
+  const List<_MyColor> myBgColors = const <_MyColor>[
+    const _MyColor(null, 'Clear'),
+    const _MyColor(const Color(0xFF76FF03), 'Green'),
+    const _MyColor(const Color(0xFFC6FF00), 'LightGreen'),
+    const _MyColor(const Color(0xFFFFFF00), 'Yellow'),
+    const _MyColor(const Color(0xFFFF1744), 'Red'),
+  ];
+  if (grade >= 90) {
+    return myBgColors[1];
+  } else if (grade >= 80) {
+    return myBgColors[2];
+  } else if (grade >= 70) {
+    return myBgColors[3];
+  } else {
+    return myBgColors[4];
+  }
+}
+
+//changes the colors for the previous semester
+_MyColor changeGpaColor(double grade) {
+  const List<_MyColor> myBgColors = const <_MyColor>[
+    const _MyColor(null, 'Clear'),
+    const _MyColor(const Color(0xFF76FF03), 'Green'),
+    const _MyColor(const Color(0xFFC6FF00), 'LightGreen'),
+    const _MyColor(const Color(0xFFFFFF00), 'Yellow'),
+    const _MyColor(const Color(0xFFFF1744), 'Red'),
+  ];
+  if (grade > 3.0) {
+    return myBgColors[1];
+  } else if (grade > 2.0) {
+    return myBgColors[2];
+  } else if (grade > 1.0) {
+    return myBgColors[3];
+  } else {
+    return myBgColors[4];
+  }
 }
