@@ -16,9 +16,6 @@ they are in different classes
 //public variables
 studentObject student1 = new studentObject();
 
-//main file runs graded app
-void main() => runApp(MaterialApp(home: gradedApp()));
-
 //only runs one class but it could run more
 class gradedApp extends StatefulWidget {
   gradedApp({Key key, @required student1}) : super(key: key);
@@ -53,14 +50,23 @@ class MyApp  extends State<gradedApp> {
     return Container(
       child: new Scaffold(
           appBar: AppBar(
-            title: Center(
-              child: Row(children: [Icon(
-                Icons.dehaze,
-                color: Colors.white,
-              ),Padding(padding: EdgeInsets.fromLTRB(110.0, 0.0, 0.0, 0.0),child: Text("GradedApp"))]),
+            leading: IconButton(icon: Icon(Icons.settings),
+                onPressed: () {
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => settingsPage()));
+                }
             ),
-          ),
-          //rest of the body
+            title: Center(
+              child:  Row(
+                  children: [
+              Padding(
+                padding: EdgeInsets.fromLTRB(80.0, 0.0, 0.0, 0.0),
+                child: Text("GradedApp"),
+              )]
+              ),
+            ),
+            automaticallyImplyLeading: false,
+          ),//rest of the body
           body: Column(
             children: <Widget>[
               //an attept to center the title row
@@ -68,16 +74,14 @@ class MyApp  extends State<gradedApp> {
               Center(
                 //current semester title with button
                 child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: <Widget>[
                     //the title
                     Container(
-                      child: Padding(
-                        padding: EdgeInsets.fromLTRB(10.0, 0.0, 125.0, 0.0),
-                        child: Text(
-                          "Current Semester",
-                          textAlign: TextAlign.center,
-                          textScaleFactor: 2,
-                        ),
+                      child: Text(
+                        "Current Semester",
+                        textAlign: TextAlign.center,
+                        textScaleFactor: 2,
                       ),
                     ),
                     //the button
@@ -86,7 +90,7 @@ class MyApp  extends State<gradedApp> {
                           appBarIcons(title: 'Refresh', icon: Icons.autorenew)
                               .icon),
                       onPressed: () {
-                        print("ye i clicke it");
+                       print("Ye click it");
                       },
                     ),
                   ],
@@ -99,14 +103,12 @@ class MyApp  extends State<gradedApp> {
               //I still have to add a button to create new semester
               Center(
                 child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    Padding(
-                      padding: EdgeInsets.fromLTRB(10.0, 0.0, 110.0, 0.0),
-                      child: Text(
-                        "Previous Semester",
-                        textAlign: TextAlign.center,
-                        textScaleFactor: 2,
-                      ),
+                    Text(
+                      "Previous Semester",
+                      textAlign: TextAlign.center,
+                      textScaleFactor: 2,
                     ),
                     IconButton(
                       icon: Icon(
@@ -124,6 +126,7 @@ class MyApp  extends State<gradedApp> {
               Expanded(child: previousSemesterListView(cummulGpa, callback)),
               //holds all the gpa's on the bottom
               Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: <Widget>[
                   //box for cummulative gpa
                   Card(

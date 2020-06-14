@@ -37,7 +37,7 @@ class _oneClass extends State<oneClass> {
     return new Scaffold(
       appBar: AppBar(
         title: Padding(
-          padding: EdgeInsets.fromLTRB(90, 0, 0, 0),
+          padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
           child: Text(name),
         ),
         actions: <Widget>[
@@ -83,7 +83,7 @@ class _oneClass extends State<oneClass> {
 
 
                   return Container(
-                    color: Colors.grey,
+                    color: Colors.white,
                     child: Column(
                       children: <Widget>[
                         Row(
