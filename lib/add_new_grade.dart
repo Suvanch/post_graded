@@ -96,7 +96,7 @@ class _addNewAssignment extends State<addNewAssignment> {
                       onPressed: () {
                         if(assignmentName != null && POG != null){
                           //print(className);
-                          student1.currentSemester[className].distribution[distName].addAssignments(assignmentName,POG);
+                          student1.currentSemester[className].distribution[distName].addAssignments(assignmentName,POG.toString());
                           Navigator.of(context).push(MaterialPageRoute(
                               builder: (context) => gradedApp(student1:student1)));
                         }

@@ -10,17 +10,17 @@ class studentObject{
   Map<String,classObject> currentSemester = new Map<String, classObject>();
   Map<String,semesterObject> previousSemester = new Map<String, semesterObject>();
 
-   studentObject(){
-     addData();
-   }
-   void addClass(String name, String teacher,String location,double grade,int credits){
+  studentObject(){
+    addData();
+  }
+  void addClass(String name, String teacher,String location,double grade,int credits){
     currentSemester[name] = classObject(name,teacher,location,grade,credits);
   }
-   double getCurrentGPA(){
+  double getCurrentGPA(){
     calcCurrentGpa();
     return this.currentGPA;
   }
-   void calcCurrentGpa(){
+  void calcCurrentGpa(){
     int totalCredits = 0;
     if (currentSemester.length == 0) {
       this.totalCredits = -1;
@@ -30,7 +30,7 @@ class studentObject{
         totalCredits += currentSemester[k].credits;
       }
     }
-     //print("1");
+    //print("1");
     if (totalCredits > 0) {
       this.totalCredits = totalCredits;
     } else {
@@ -56,17 +56,17 @@ class studentObject{
     this.currentGPA =double.parse((totalGPAPoints/totalCredits).toStringAsFixed(4));
 
   }
-   Map<String,classObject>getCurrentSemester(){
-     return currentSemester;
+  Map<String,classObject>getCurrentSemester(){
+    return currentSemester;
   }
-   classObject getClass(String name){
-     for (var k in currentSemester.keys) {
-       if(k == name){
-         return currentSemester[k];
-     }
+  classObject getClass(String name){
+    for (var k in currentSemester.keys) {
+      if(k == name){
+        return currentSemester[k];
       }
-      return null;
-   }
+    }
+    return null;
+  }
   void addSemester(String name,double grade,int credits){
     previousSemester[name] = new semesterObject(name, grade, credits);
   }
@@ -76,22 +76,22 @@ class studentObject{
   }
   void calcCumulativeGpa(){
 
-     int length = previousSemester.length;
-     double totalCreditPoints = 0;
-     int totalCredits =0;
-     if(length > 0){
+    int length = previousSemester.length;
+    double totalCreditPoints = 0;
+    int totalCredits =0;
+    if(length > 0){
 
-       for (var k in previousSemester.keys) {
-         totalCreditPoints += previousSemester[k].getCreditPoints();
-         totalCredits += previousSemester[k].credits;
-       }
+      for (var k in previousSemester.keys) {
+        totalCreditPoints += previousSemester[k].getCreditPoints();
+        totalCredits += previousSemester[k].credits;
+      }
 
 
       cumulativeGPA = double.parse((totalCreditPoints/totalCredits).toStringAsFixed(4));
-     }
-     else{
-       cumulativeGPA = -1;
-     }
+    }
+    else{
+      cumulativeGPA = -1;
+    }
 
   }
   void removeSemester(String name){
@@ -114,19 +114,19 @@ class studentObject{
     this.currentSemester["CS1337"].addDistribution("minor",30.0);
     this.currentSemester["CS1337"].addDistribution("daily",20.0);
     //you have to add + 0.0 it causes some stupid problem
-    this.currentSemester["CS1337"].distribution["major"].addAssignments("test1",100+0.0);
-    this.currentSemester["CS1337"].distribution["major"].addAssignments("test2",80+0.0);
-    this.currentSemester["CS1337"].distribution["major"].addAssignments("test3",70+0.0);
-    this.currentSemester["CS1337"].distribution["major"].addAssignments("test4",60+0.0);
-    this.currentSemester["CS1337"].distribution["minor"].addAssignments("quiz1",90+0.0);
-    this.currentSemester["CS1337"].distribution["minor"].addAssignments("quiz2",80+0.0);
-    this.currentSemester["CS1337"].distribution["minor"].addAssignments("quiz3",70+0.0);
-    this.currentSemester["CS1337"].distribution["minor"].addAssignments("quiz4",60+0.0);
-    this.currentSemester["CS1337"].distribution["daily"].addAssignments("quiz1",90+0.0);
-    this.currentSemester["CS1337"].distribution["daily"].addAssignments("quiz2",80+0.0);
-    this.currentSemester["CS1337"].distribution["daily"].addAssignments("quiz3",70+0.0);
-    this.currentSemester["CS1337"].distribution["daily"].addAssignments("quiz4",60+0.0);
-   // this.currentSemester["CS1337"].addDistribution("dd", 15.0);
+    this.currentSemester["CS1337"].distribution["major"].addAssignments("test1",(100+0.0).toString());
+    this.currentSemester["CS1337"].distribution["major"].addAssignments("test2",(90+0.0).toString());
+    this.currentSemester["CS1337"].distribution["major"].addAssignments("test3",(0+0.0).toString());
+    this.currentSemester["CS1337"].distribution["major"].addAssignments("test4","hrrg");
+    this.currentSemester["CS1337"].distribution["minor"].addAssignments("quiz1",(90+0.0).toString());
+    this.currentSemester["CS1337"].distribution["minor"].addAssignments("quiz2",(80+0.0).toString());
+    this.currentSemester["CS1337"].distribution["minor"].addAssignments("quiz3",(70+0.0).toString());
+    this.currentSemester["CS1337"].distribution["minor"].addAssignments("quiz4",(60+0.0).toString());
+    this.currentSemester["CS1337"].distribution["daily"].addAssignments("quiz1",(90+0.0).toString());
+    this.currentSemester["CS1337"].distribution["daily"].addAssignments("quiz2",(80+0.0).toString());
+    this.currentSemester["CS1337"].distribution["daily"].addAssignments("quiz3",(70+0.0).toString());
+    this.currentSemester["CS1337"].distribution["daily"].addAssignments("quiz4",(60+0.0).toString());
+    this.currentSemester["CS1337"].addDistribution("dd", 15.0);
 
   }
 
@@ -188,15 +188,14 @@ class classObject{
 
   }
   void addDistribution(String name, double percent){
-    //print("hi");
+
     distribution[name] = new distributionObject(percent);
-    //print("gm");
   }
   void deleteDistribution(String name){
     if(distribution.containsKey(name)&&name != "Unsigned" ){
       for (var k in distribution[name].distributedGrades.keys) {
         double p = distribution[name].distributedGrades[k];
-        distribution["Unsigned"].addAssignments(k,p);
+        distribution["Unsigned"].addAssignments(k,p.toString());
       }
       distribution.remove(name);
     }
@@ -268,9 +267,12 @@ class classObject{
       }
     }
   }
+  double getGrade(){
+    return double.parse((grade.toStringAsFixed(4)));
+  }
 }
 
-class distributionObject{
+class distributionObject extends tools{
   //String name;
   double weight;
 
@@ -279,13 +281,15 @@ class distributionObject{
   distributionObject(double weight){
     this.weight = weight;
   }
-    double getWeight(){
+  double getWeight(){
     return this.weight;
   }
-   void addAssignments(String name, double percent){
-    distributedGrades[name]=percent;
+  void addAssignments(String name, String percent){
+    if(isNumeric(percent.toString())){
+      distributedGrades[name]=double.parse(percent);
+    }
   }
-   double getWeightAchived(){
+  double getWeightAchived(){
     double weight;
     double average;
     //if there are no assignments
@@ -293,7 +297,7 @@ class distributionObject{
       return 0;
     }
     else {
-      double a =0;
+      double a = 0;
       //adds up all the grades
       for (var k in distributedGrades.keys) {
         a += distributedGrades[k];
@@ -301,16 +305,19 @@ class distributionObject{
 
       //if the sum of all the grades is below 0
       if(a < 0){
-        return -1;
+        return 0;
       }
       //calculate average
       average = a/distributedGrades.length;
     }
     //calculate weight earned
     weight = average*(this.weight/100);
+    print(weight);
     return weight;
   }
-
+  void removeAssignment(String name){
+    distributedGrades.remove(name);
+  }
 
 }
 
@@ -327,3 +334,15 @@ class gradeObject{
   }
 
 }
+
+//use trycatch for exceptions
+class tools{
+  bool isNumeric(String s) {
+    if(s == null) {
+      return false;
+    }
+    return double.parse(s, (e) => null) != null;
+  }
+
+}
+

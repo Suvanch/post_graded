@@ -21,7 +21,6 @@ class gradedApp extends StatefulWidget {
   gradedApp({Key key, @required student1}) : super(key: key);
   @override
   State<StatefulWidget> createState() =>MyApp(student1);
-
 }
 /*
 class MyApp  extends State<gradedApp>{
@@ -62,9 +61,17 @@ class MyApp  extends State<gradedApp> {
               Padding(
                 padding: EdgeInsets.fromLTRB(80.0, 0.0, 0.0, 0.0),
                 child: Text("GradedApp"),
-              )]
+              ),]
               ),
             ),
+            actions: <Widget>[IconButton(
+              icon: Icon(
+                  appBarIcons(title: 'Refresh', icon: Icons.autorenew)
+                      .icon),
+              onPressed: () {
+                print("Ye click it");
+              },
+            ),],
             automaticallyImplyLeading: false,
           ),//rest of the body
           body: Column(
@@ -85,19 +92,12 @@ class MyApp  extends State<gradedApp> {
                       ),
                     ),
                     //the button
-                    IconButton(
-                      icon: Icon(
-                          appBarIcons(title: 'Refresh', icon: Icons.autorenew)
-                              .icon),
-                      onPressed: () {
-                       print("Ye click it");
-                      },
-                    ),
                   ],
                 ),
               ),
               //the current semester listview
-              Expanded(child: currentSemesterListView()),
+             Expanded(child: currentSemesterListView()),
+              //currentSemesterListView(),
               //the title for previous semesters
               //properly centered
               //I still have to add a button to create new semester
@@ -136,15 +136,15 @@ class MyApp  extends State<gradedApp> {
                           color: Colors.blueAccent,
                           borderRadius:
                               new BorderRadius.all(Radius.circular(30))),
-                      width: 190,
+                      width: (MediaQuery.of(context).size.width / 2) - 10,
                       height: 100,
                       //the title text with padding to move the text arround for fun
                       child: Column(
                         children: <Widget>[
                           Padding(
-                            padding: EdgeInsets.fromLTRB(32.0, 0.0, 32.0, 0.0),
+                            padding: EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 0.0),
                             child: Text(
-                              "Cumulative GPA",
+                              "Cumul GPA",
                               textScaleFactor: 1.5,
                               textAlign: TextAlign.center,
                             ),
@@ -168,12 +168,12 @@ class MyApp  extends State<gradedApp> {
                           color: Colors.blueAccent,
                           borderRadius:
                               new BorderRadius.all(Radius.circular(30))),
-                      width: 190,
+                      width: (MediaQuery.of(context).size.width / 2) - 10,
                       height: 100,
                       child: Column(
                         children: <Widget>[
                           Padding(
-                            padding: EdgeInsets.fromLTRB(25.0, 20.0, 32.0, 0.0),
+                            padding: EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 0.0),
                             child: Text(
                               " Current GPA ",
                               textScaleFactor: 1.5,
@@ -220,9 +220,10 @@ class currentSemesterListView extends StatelessWidget {
   //adds the colums in the listview
   Widget build(BuildContext context) {
     return ListView.builder(
+
       itemCount: student1.getCurrentSemester().length,
       itemBuilder: (BuildContext context, int index) {
-        
+
         String key = student1.getCurrentSemester().keys.elementAt(index);
         //tells what each colum should look like
         return InkWell(
@@ -236,34 +237,22 @@ class currentSemesterListView extends StatelessWidget {
             child: Card(
               color: changeGradeColor(student1.getCurrentSemester()[key].grade).color,
               child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
                   //for the name
-                  Card(
-                    child: Container(
-                      height: 49,
-                      width: 300,
-                      color: changeGradeColor(student1.getCurrentSemester()[key].grade).color,
-                      child: Padding(
-                        padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
-                        child: Text(
-                          key,
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                      alignment: Alignment(-1.0, 0.0),
+                  Padding(
+                    padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
+                    child: Text(
+                      key,
+                      style: TextStyle(fontWeight: FontWeight.bold),
                     ),
                   ),
                   //for the grade
-                  Card(
-                    child: Container(
-                      height: 49,
-                      width: 75,
-                      color: changeGradeColor(student1.getCurrentSemester()[key].grade).color,
-                      child: Text(
-                        student1.getCurrentSemester()[key].grade.toString(),
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                      alignment: Alignment(0.0, 0.0),
+                  Padding(
+                    padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
+                    child: Text(
+                      student1.getCurrentSemester()[key].grade.toString(),
+                      style: TextStyle(fontWeight: FontWeight.bold),
                     ),
                   ),
                 ],
@@ -329,34 +318,20 @@ class _previousSemesterListViewState extends State<previousSemesterListView> {
             child: Card(
               color: changeGpaColor(student1.getPreviousSemester()[key].gpa).color,
               child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
-                  Card(
-                    child: Container(
-                      height: 49,
-                      width: 300,
-                      color: changeGpaColor(student1.getPreviousSemester()[key].gpa)
-                          .color,
-                      child: Padding(
-                        padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
-                        child: Text(
-                          key,
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                      alignment: Alignment(-1.0, 0.0),
+                  Padding(
+                    padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
+                    child: Text(
+                      key,
+                      style: TextStyle(fontWeight: FontWeight.bold),
                     ),
                   ),
-                  Card(
-                    child: Container(
-                      height: 49,
-                      width: 75,
-                      color: changeGpaColor(student1.getPreviousSemester()[key].gpa)
-                          .color,
-                      child: Text(
-                        student1.getPreviousSemester()[key].gpa.toString(),
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                      alignment: Alignment(0.0, 0.0),
+                  Padding(
+                    padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
+                    child: Text(
+                      student1.getPreviousSemester()[key].gpa.toString(),
+                      style: TextStyle(fontWeight: FontWeight.bold),
                     ),
                   ),
                 ],
