@@ -54,7 +54,7 @@ class settingsPage extends StatelessWidget{
             ),
             Card(
                 elevation: 4.0,
-                margin: const EdgeInsets.fromLTRB(32.0, 8.0, 32.0, 16.0),
+                margin: const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 16.0),
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
                 color: Colors.blue,
                 child: Row(

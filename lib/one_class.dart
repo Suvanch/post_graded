@@ -122,7 +122,7 @@ class _oneClass extends State<oneClass> {
                                 ),
                                 Center(
                                   child: Text(
-                                    "Total Weight: remaining to $weight",
+                                    "Total Weight: $weight",
                                     style: new TextStyle(
                                         fontWeight: FontWeight.bold,
                                         fontSize: 15),
@@ -156,50 +156,54 @@ class _oneClass extends State<oneClass> {
                             var myList = [""];
                             class1.distribution.forEach((k, v) => myList.add(k));
 
-                            return Container(
-                              height: 50,
-                              decoration: new BoxDecoration(
-                                color: changeGradeColor(distribution1
-                                        .distributedGrades[gradeName])
-                                    .color,
-                                borderRadius:
-                                    new BorderRadius.all(Radius.circular(15.0)),
+                            return Dismissible(
+                              key: new Key(gradeName),
+                              onDismissed: (direction) {
+                                class1.distribution[key].removeAssignment(gradeName);
+                                //student1.getPreviousSemester().remove(key);
+                                //print(student1.getPreviousSemester());
+                                //Scaffold.of(context).showSnackBar(
+                                //new SnackBar(content: new Text("Removed Semester")));
+                                changeAverage();
+                              },
+                              background: Container(
+                                alignment: AlignmentDirectional.centerEnd,
+                                color: Colors.red,
+                                child: Icon(
+                                  Icons.delete,
+                                  color: Colors.white,
+                                ),
                               ),
-                              //color: Colors.amber[600],
-                              child: Card(
-                                color: changeGradeColor(distribution1
-                                        .distributedGrades[gradeName])
-                                    .color,
-                                child: Row(
-                                  children: <Widget>[
-                                    //grade name
-                                    Card(
-                                      child: Container(
-                                        height: 49,
-                                        width: 100,
-                                        color: changeGradeColor(distribution1
-                                                .distributedGrades[gradeName])
-                                            .color,
-                                        child: Padding(
-                                          padding:
-                                              EdgeInsets.fromLTRB(20, 0, 50, 0),
-                                          child: Text(
-                                            gradeName,
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold),
-                                          ),
+                              direction: DismissDirection.endToStart,
+                              child: Container(
+                                height: 50,
+                                decoration: new BoxDecoration(
+                                  color: changeGradeColor(distribution1
+                                          .distributedGrades[gradeName])
+                                      .color,
+                                  borderRadius:
+                                      new BorderRadius.all(Radius.circular(15.0)),
+                                ),
+                                //color: Colors.amber[600],
+                                child: Card(
+                                  color: changeGradeColor(distribution1
+                                          .distributedGrades[gradeName])
+                                      .color,
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: <Widget>[
+                                      //grade name
+                                      Padding(
+                                        padding: EdgeInsets.fromLTRB(20, 0, 50, 0),
+                                        child: Text(
+                                          gradeName,
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold),
                                         ),
-                                        alignment: Alignment(-1.0, 0.0),
                                       ),
-                                    ),
-                                    Card(
-                                        child: Container(
-                                      height: 49,
-                                      width: 200,
-                                      color: changeGradeColor(distribution1.distributedGrades[gradeName]).color,
-                                      child: Padding(
+                                      Padding(
                                         padding:
-                                            EdgeInsets.fromLTRB(20, 0, 0, 0),
+                                        EdgeInsets.fromLTRB(20, 0, 0, 0),
                                         //dropdown meun
                                         child:DropdownButton<String>(
                                           value: dropdownValue,
@@ -225,47 +229,47 @@ class _oneClass extends State<oneClass> {
                                         ),
                                         //dropDownMenu(oldDistributionName:key,assignmentName:gradeName,class1:class1),
                                       ),
-                                    )
-                                    ),
-                                    //grade average
-                                    Card(
-                                      child: Container(
-                                        height: 49,
-                                        width: 75,
-                                        color: changeGradeColor(distribution1
-                                                .distributedGrades[gradeName])
-                                            .color,
-                                        child: TextField(
-                                          autofocus: false,
-                                          keyboardType:
-                                              TextInputType.numberWithOptions(
-                                                  signed: false, decimal: true),
-                                          decoration: InputDecoration(
-                                            hintText: distribution1
-                                                .distributedGrades[gradeName]
-                                                .toString(),
-                                            hintStyle: TextStyle(
-                                              fontSize: 20.0,
-                                              color: Colors.black,
-                                            ),
-                                            border: OutlineInputBorder(
-                                              borderSide: BorderSide(
-                                                color: Colors.teal,
+                                      //grade average
+                                      Card(
+                                        child: Container(
+                                          height: 49,
+                                          width: 75,
+                                          color: changeGradeColor(distribution1
+                                                  .distributedGrades[gradeName])
+                                              .color,
+                                          child: TextField(
+                                            textAlign: TextAlign.center,
+                                            autofocus: false,
+                                            keyboardType:
+                                                TextInputType.numberWithOptions(
+                                                    signed: false, decimal: true),
+                                            decoration: InputDecoration(
+                                              hintText: distribution1
+                                                  .distributedGrades[gradeName]
+                                                  .toString(),
+                                              hintStyle: TextStyle(
+                                                fontSize: 20.0,
+                                                color: Colors.black,
+                                              ),
+                                              border: OutlineInputBorder(
+                                                borderSide: BorderSide(
+                                                  color: Colors.teal,
+                                                ),
                                               ),
                                             ),
+                                            onChanged: (text) {
+                                              distribution1.distributedGrades[
+                                                  gradeName] = double.parse(text);
+                                              changeAverage();
+                                            },
+                                            //widget.callback1(student1.getCumulativeGpa().toString());
+                                            // gpa = double.parse(text);
                                           ),
-                                          onChanged: (text) {
-                                            distribution1.distributedGrades[
-                                                gradeName] = double.parse(text);
-                                            changeAverage();
-                                          },
-                                          //widget.callback1(student1.getCumulativeGpa().toString());
-                                          // gpa = double.parse(text);
+                                          alignment: Alignment(0.0, 0.0),
                                         ),
-                                        alignment: Alignment(0.0, 0.0),
                                       ),
-                                    ),
-                                  ],
+                                    ],
+                                  ),
                                 ),
                               ),
                             );
@@ -284,13 +288,13 @@ class _oneClass extends State<oneClass> {
                   decoration: new BoxDecoration(
                       color: Colors.blueAccent,
                       borderRadius: new BorderRadius.all(Radius.circular(30))),
-                  width: 190,
+                  width: (MediaQuery.of(context).size.width / 2) - 10,
                   height: 100,
                   //the title text with padding to move the text arround for fun
                   child: Column(
                     children: <Widget>[
                       Padding(
-                        padding: EdgeInsets.fromLTRB(32.0, 0.0, 32.0, 0.0),
+                        padding: EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 0.0),
                         child: Text(
                           "GPA",
                           textScaleFactor: 1.5,
@@ -315,12 +319,12 @@ class _oneClass extends State<oneClass> {
                   decoration: new BoxDecoration(
                       color: Colors.blueAccent,
                       borderRadius: new BorderRadius.all(Radius.circular(30))),
-                  width: 190,
+                  width: (MediaQuery.of(context).size.width / 2) - 10,
                   height: 100,
                   child: Column(
                     children: <Widget>[
                       Padding(
-                        padding: EdgeInsets.fromLTRB(25.0, 0.0, 32.0, 0.0),
+                        padding: EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 0.0),
                         child: Text(
                           " Class Average ",
                           textScaleFactor: 1.5,

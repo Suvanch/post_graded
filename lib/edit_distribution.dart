@@ -138,7 +138,7 @@ class _editDistribution extends State<editDistribution> {
                         if(newDistriutionName != null && POG != null){
                           student1.currentSemester[className].addDistribution(newDistriutionName,POG);
                             for (var k in student1.currentSemester[className].distribution[oldDistributionName].distributedGrades.keys) {
-                              student1.currentSemester[className].distribution[newDistriutionName].addAssignments(k, student1.currentSemester[className].distribution[oldDistributionName].distributedGrades[k]);
+                              student1.currentSemester[className].distribution[newDistriutionName].addAssignments(k, student1.currentSemester[className].distribution[oldDistributionName].distributedGrades[k].toString());
                             }
                           student1.currentSemester[className].distribution.remove(oldDistributionName);
                           Navigator.of(context).push(MaterialPageRoute(
@@ -152,7 +152,7 @@ class _editDistribution extends State<editDistribution> {
                         else{
                             student1.currentSemester[className].addDistribution(newDistriutionName,POG);
                             for (var k in student1.currentSemester[className].distribution[oldDistributionName].distributedGrades.keys) {
-                            student1.currentSemester[className].distribution[newDistriutionName].addAssignments(k, student1.currentSemester[className].distribution[oldDistributionName].distributedGrades[k]);
+                            student1.currentSemester[className].distribution[newDistriutionName].addAssignments(k, student1.currentSemester[className].distribution[oldDistributionName].distributedGrades[k].toString());
                             }
                             student1.currentSemester[className].distribution.remove(oldDistributionName);
                             Navigator.of(context).push(MaterialPageRoute(
