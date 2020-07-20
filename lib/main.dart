@@ -49,6 +49,10 @@ class MyApp  extends State<gradedApp> {
     return Container(
       child: new Scaffold(
           appBar: AppBar(
+            elevation: 0,
+            brightness: Brightness.light,
+            iconTheme: IconThemeData(color: Colors.black),
+            backgroundColor: Colors.grey.shade200,
             leading: IconButton(icon: Icon(Icons.settings),
                 onPressed: () {
                   Navigator.of(context).push(MaterialPageRoute(
@@ -60,7 +64,7 @@ class MyApp  extends State<gradedApp> {
                   children: [
               Padding(
                 padding: EdgeInsets.fromLTRB(80.0, 0.0, 0.0, 0.0),
-                child: Text("GradedApp"),
+                child: Text('GradePost',textAlign: TextAlign.center, style: TextStyle(color: Colors.black),),
               ),]
               ),
             ),
@@ -133,20 +137,23 @@ class MyApp  extends State<gradedApp> {
                     child: Container(
                       //rounding of the boxes
                       decoration: new BoxDecoration(
-                          color: Colors.blueAccent,
+                          color: Colors.white,
                           borderRadius:
-                              new BorderRadius.all(Radius.circular(30))),
-                      width: (MediaQuery.of(context).size.width / 2) - 10,
+                          new BorderRadius.all(Radius.circular(30))),
+                      width: 190,
                       height: 100,
                       //the title text with padding to move the text arround for fun
                       child: Column(
                         children: <Widget>[
                           Padding(
-                            padding: EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 0.0),
+                            padding: EdgeInsets.fromLTRB(25.0, 20.0, 32.0, 0.0),
                             child: Text(
-                              "Cumul GPA",
+                              "Overall GPA",
                               textScaleFactor: 1.5,
                               textAlign: TextAlign.center,
+                              style: TextStyle(
+                                  color: Colors.blueAccent
+                              ),
                             ),
                           ),
                           //the gpa text with padding to move the text arround for fun
@@ -155,6 +162,7 @@ class MyApp  extends State<gradedApp> {
                             child: Text(
                               cummulGpa.toString(),
                               textScaleFactor: 2.0,
+
                             ),
                           )
                         ],
@@ -165,19 +173,22 @@ class MyApp  extends State<gradedApp> {
                   Card(
                     child: Container(
                       decoration: new BoxDecoration(
-                          color: Colors.blueAccent,
+                          color: Colors.white,
                           borderRadius:
-                              new BorderRadius.all(Radius.circular(30))),
-                      width: (MediaQuery.of(context).size.width / 2) - 10,
+                          new BorderRadius.all(Radius.circular(30))),
+                      width: 190,
                       height: 100,
                       child: Column(
                         children: <Widget>[
                           Padding(
-                            padding: EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 0.0),
+                            padding: EdgeInsets.fromLTRB(25.0, 20.0, 32.0, 0.0),
                             child: Text(
                               " Current GPA ",
                               textScaleFactor: 1.5,
                               textAlign: TextAlign.center,
+                              style: TextStyle(
+                                  color: Colors.blueAccent
+                              ),
                             ),
                           ),
                           Padding(
@@ -229,9 +240,6 @@ class currentSemesterListView extends StatelessWidget {
         return InkWell(
           child: Container(
             //rounded edges
-            decoration: new BoxDecoration(
-                color: changeGradeColor(student1.getCurrentSemester()[key].grade).color,
-                borderRadius: new BorderRadius.all(Radius.circular(15))),
             height: 50,
             //color: Colors.amber[600],
             child: Card(
@@ -310,10 +318,7 @@ class _previousSemesterListViewState extends State<previousSemesterListView> {
           direction: DismissDirection.endToStart,
           child: Container(
             height: 50,
-            decoration: new BoxDecoration(
-              color: changeGpaColor(student1.getPreviousSemester()[key].gpa).color,
-              borderRadius: new BorderRadius.all(Radius.circular(15.0)),
-            ),
+
             //color: Colors.amber[600],
             child: Card(
               color: changeGpaColor(student1.getPreviousSemester()[key].gpa).color,
@@ -378,8 +383,8 @@ _MyColor changeGpaColor(double grade) {
   const List<_MyColor> myBgColors = const <_MyColor>[
     const _MyColor(null, 'Clear'),
     const _MyColor(const Color(0xFF76FF03), 'Green'),
-    const _MyColor(const Color(0xFFC6FF00), 'LightGreen'),
     const _MyColor(const Color(0xFFFFFF00), 'Yellow'),
+    const _MyColor(const Color(0xFFFF9100), 'Orange'),
     const _MyColor(const Color(0xFFFF1744), 'Red'),
   ];
   if (grade > 3.0) {

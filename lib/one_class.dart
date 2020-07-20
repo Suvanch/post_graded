@@ -177,13 +177,6 @@ class _oneClass extends State<oneClass> {
                               direction: DismissDirection.endToStart,
                               child: Container(
                                 height: 50,
-                                decoration: new BoxDecoration(
-                                  color: changeGradeColor(distribution1
-                                          .distributedGrades[gradeName])
-                                      .color,
-                                  borderRadius:
-                                      new BorderRadius.all(Radius.circular(15.0)),
-                                ),
                                 //color: Colors.amber[600],
                                 child: Card(
                                   color: changeGradeColor(distribution1
@@ -285,9 +278,6 @@ class _oneClass extends State<oneClass> {
               Card(
                 child: Container(
                   //rounding of the boxes
-                  decoration: new BoxDecoration(
-                      color: Colors.blueAccent,
-                      borderRadius: new BorderRadius.all(Radius.circular(30))),
                   width: (MediaQuery.of(context).size.width / 2) - 10,
                   height: 100,
                   //the title text with padding to move the text arround for fun
@@ -316,9 +306,6 @@ class _oneClass extends State<oneClass> {
               //same as the card before
               Card(
                 child: Container(
-                  decoration: new BoxDecoration(
-                      color: Colors.blueAccent,
-                      borderRadius: new BorderRadius.all(Radius.circular(30))),
                   width: (MediaQuery.of(context).size.width / 2) - 10,
                   height: 100,
                   child: Column(
