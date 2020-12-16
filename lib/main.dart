@@ -3,6 +3,7 @@ import 'package:flutter/rendering.dart';
 import 'package:postgraded/settingsPage.dart';
 import 'studentObject.dart';
 import 'add_new_semester.dart';
+import 'add_new_class.dart';
 import 'one_class.dart';
 
 
@@ -46,6 +47,8 @@ class MyApp  extends State<gradedApp> {
   //UI
   @override
   Widget build(BuildContext context) {
+    double width = MediaQuery.of(context).size.width;
+    double height = MediaQuery.of(context).size.height;
     return Container(
       child: new Scaffold(
           appBar: AppBar(
@@ -95,6 +98,15 @@ class MyApp  extends State<gradedApp> {
                         textScaleFactor: 2,
                       ),
                     ),
+                    IconButton(
+                      icon: Icon(
+                          appBarIcons(title: 'AddClass', icon: Icons.add)
+                              .icon),
+                      onPressed: () {
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => addNewClass(student1:student1)));
+                      },
+                    ),
                     //the button
                   ],
                 ),
@@ -140,8 +152,8 @@ class MyApp  extends State<gradedApp> {
                           color: Colors.white,
                           borderRadius:
                           new BorderRadius.all(Radius.circular(30))),
-                      width: 190,
-                      height: 100,
+                      width: width/2.5,
+                      height: height/9,
                       //the title text with padding to move the text arround for fun
                       child: Column(
                         children: <Widget>[
@@ -149,7 +161,7 @@ class MyApp  extends State<gradedApp> {
                             padding: EdgeInsets.fromLTRB(25.0, 20.0, 32.0, 0.0),
                             child: Text(
                               "Overall GPA",
-                              textScaleFactor: 1.5,
+                              textScaleFactor: 1,
                               textAlign: TextAlign.center,
                               style: TextStyle(
                                   color: Colors.blueAccent
@@ -161,7 +173,7 @@ class MyApp  extends State<gradedApp> {
                             padding: EdgeInsets.fromLTRB(35.0, 0.0, 32.0, 16.0),
                             child: Text(
                               cummulGpa.toString(),
-                              textScaleFactor: 2.0,
+                              textScaleFactor: 1.4,
 
                             ),
                           )
@@ -176,15 +188,15 @@ class MyApp  extends State<gradedApp> {
                           color: Colors.white,
                           borderRadius:
                           new BorderRadius.all(Radius.circular(30))),
-                      width: 190,
-                      height: 100,
+                      width: width/2.5,
+                      height: height/9,
                       child: Column(
                         children: <Widget>[
                           Padding(
                             padding: EdgeInsets.fromLTRB(25.0, 20.0, 32.0, 0.0),
                             child: Text(
                               " Current GPA ",
-                              textScaleFactor: 1.5,
+                              textScaleFactor: 1,
                               textAlign: TextAlign.center,
                               style: TextStyle(
                                   color: Colors.blueAccent
@@ -195,7 +207,7 @@ class MyApp  extends State<gradedApp> {
                             padding: EdgeInsets.fromLTRB(30.0, 0.0, 32.0, 16.0),
                             child: Text(
                               currentGpa.toString(),
-                              textScaleFactor: 2.0,
+                              textScaleFactor: 1.4,
                             ),
                           ),
                         ],

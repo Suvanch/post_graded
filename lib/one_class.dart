@@ -38,8 +38,9 @@ class _oneClass extends State<oneClass> {
       appBar: AppBar(
         title: Padding(
           padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-          child: Text(name),
+          child: Text(name,textAlign: TextAlign.center, style: TextStyle(color: Colors.black),),
         ),
+        backgroundColor: Colors.grey.shade200,
         actions: <Widget>[
           Row(
             children: <Widget>[
