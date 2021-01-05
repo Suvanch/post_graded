@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
-import 'package:postgraded/Intro.dart';
+import 'package:postgraded/main.dart';
 
 class settingsPage extends StatelessWidget{
   bool _tester = false;

@@ -1,8 +1,8 @@
 import 'package:page_transition/page_transition.dart';
 import 'package:postgraded/Animations/FadeAnimation.dart';
 import 'package:flutter/material.dart';
-import 'package:postgraded/Intro.dart';
 import 'package:postgraded/main.dart';
+import 'package:postgraded/homePage.dart';
 
 class LoginPage extends StatelessWidget {
   @override

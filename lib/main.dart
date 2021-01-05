@@ -1,494 +1,218 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
-import 'package:postgraded/settingsPage.dart';
-import 'studentObject.dart';
-import 'add_new_semester.dart';
-import 'add_new_class.dart';
-import 'one_class.dart';
+import 'package:page_transition/page_transition.dart';
+import 'package:postgraded/Animations/FadeAnimation.dart';
+import 'package:postgraded/LoginPage.dart';
 
+void main() => runApp(
+  MaterialApp(
+    debugShowCheckedModeBanner: false,
+    home: HomePage()
+  )
+);
 
-/*
-I need to figure out how to update cumulative gpa as the sutdent removes
-it from the list
-The text is in MyApp and the is change is made in previousSemesterListView
-they are in different classes
-*/
-
-//public variables
-studentObject student1 = new studentObject();
-
-//only runs one class but it could run more
-class gradedApp extends StatefulWidget {
-  gradedApp({Key key, @required student1}) : super(key: key);
-  @override
-  State<StatefulWidget> createState() =>MyApp(student1);
+class HomePage extends StatefulWidget {
+  _HomePageState createState() => _HomePageState();
 }
 
-//the actual app so far
-class MyApp  extends State<gradedApp> {
-  //changes cumulative gpa
-  String currentGpa = student1.getCurrentGPA().toString();
-  String cummulGpa = student1.getCumulativeGpa().toString();
-  MyApp(student1);
-  callback(newCummulGpa) {
-    setState(() {
-      cummulGpa = newCummulGpa;
+class _HomePageState extends State<HomePage> with TickerProviderStateMixin{
+
+  AnimationController _scaleController;
+  AnimationController _scale2Controller;
+  AnimationController _widthController;
+  AnimationController _positionController;
+
+  Animation<double> _scaleAnimation;
+  Animation<double> _scale2Animation;
+  Animation<double> _widthAnimation;
+  Animation<double> _positionAnimation;
+
+  bool hideIcon = false;
+
+  @override
+  void initState(){
+    //implement initstate
+    super.initState();
+
+    _scaleController = AnimationController(
+      vsync: this,
+      duration: Duration(milliseconds: 300)
+    );
+
+    _scaleAnimation = Tween<double>(
+      begin: 1.0, end: 0.8
+    ).animate(_scaleController)..addStatusListener((status) {
+      if (status == AnimationStatus.completed) {
+        _widthController.forward();
+      }
+    });
+
+    _widthController = AnimationController(
+      vsync: this,
+      duration: Duration(milliseconds: 600)
+    );
+
+    _widthAnimation = Tween<double>(
+        begin: 80.0,
+        end: 300.0
+    ).animate(_widthController)..addStatusListener((status) {
+      if (status == AnimationStatus.completed) {
+        _positionController.forward();
+      }
+    });
+
+    _positionController = AnimationController(
+        vsync: this,
+        duration: Duration(milliseconds: 1000)
+    );
+
+    _positionAnimation = Tween<double>(
+        begin: 0.0,
+        end: 215.0
+    ).animate(_positionController)..addStatusListener((status) {
+      if (status == AnimationStatus.completed) {
+        setState(() {
+          hideIcon = true;
+        });
+        _scale2Controller.forward();
+      }
+    });
+
+    _scale2Controller = AnimationController(
+        vsync: this,
+        duration: Duration(milliseconds: 300)
+    );
+
+    _scale2Animation = Tween<double>(
+      begin: 1.0,
+      end: 32.0
+    ).animate(_scale2Controller)..addStatusListener((status) {
+      if (status == AnimationStatus.completed) {
+        Navigator.push(context, PageTransition(type: PageTransitionType.fade, child: LoginPage()));
+      }
     });
   }
-  callback1(newCurrGpa){
-    setState(() {
-      currentGpa = newCurrGpa;
-    });
-  }
 
-  //UI
   @override
-  Widget build(BuildContext context) {
-    double width = MediaQuery.of(context).size.width;
-    double height = MediaQuery.of(context).size.height;
-    return Container(
-      child: new Scaffold(
-          appBar: AppBar(
-            elevation: 0,
-            brightness: Brightness.light,
-            iconTheme: IconThemeData(color: Colors.black),
-            backgroundColor: Colors.grey.shade200,
-            leading: IconButton(icon: Icon(Icons.settings),
-                onPressed: () {
-                  Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => settingsPage()));
-                }
-            ),
-            title: Center(
-              child:  Row(
-                  children: [
-              Padding(
-                padding: EdgeInsets.fromLTRB(80.0, 0.0, 0.0, 0.0),
-                child: Text('GradePost',textAlign: TextAlign.center, style: TextStyle(color: Colors.black),),
-              ),]
-              ),
-            ),
-            actions: <Widget>[IconButton(
-              icon: Icon(
-                  appBarIcons(title: 'Refresh', icon: Icons.autorenew)
-                      .icon),
-              onPressed: () {
-                print("Ye click it");
-              },
-            ),],
-            automaticallyImplyLeading: false,
-          ),//rest of the body
-          body: Column(
-            children: <Widget>[
-              //an attept to center the title row
-              //spoiler doesnt work
-              Center(
-                //current semester title with button
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: <Widget>[
-                    //the title
-                    Container(
-                      child: Text(
-                        "Current Semester",
-                        textAlign: TextAlign.center,
-                        textScaleFactor: 2,
-                      ),
-                    ),
-                    IconButton(
-                      icon: Icon(
-                          appBarIcons(title: 'AddClass', icon: Icons.add)
-                              .icon),
-                      onPressed: () {
-                        Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) => addNewClass(student1:student1)));
-                      },
-                    ),
-                    //the button
-                  ],
+  Widget build(BuildContext context){
+    final double width = MediaQuery.of(context).size.width;
+
+    return Scaffold(
+      backgroundColor: Color.fromRGBO(3, 9, 23, 1), //Change background color
+      resizeToAvoidBottomPadding: false,
+      body: Container(
+        width: double.infinity,
+        child: Stack(
+          children: <Widget>[
+            Positioned(
+              top: -50,
+              left: 0,
+              child: FadeAnimation(1, Container(
+                width: width,
+                height: 400,
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    image: AssetImage('assets/images/one.png'),
+                    fit: BoxFit.cover,
+                  )
                 ),
-              ),
-              //the current semester listview
-             Expanded(child: currentSemesterListView(currentGpa.toString(), callback1)),
-              //currentSemesterListView(),
-              //the title for previous semesters
-              //properly centered
-              //I still have to add a button to create new semester
-              Center(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    Text(
-                      "Previous Semester",
-                      textAlign: TextAlign.center,
-                      textScaleFactor: 2,
-                    ),
-                    IconButton(
-                      icon: Icon(
-                          appBarIcons(title: 'AddSemester', icon: Icons.add)
-                              .icon),
-                      onPressed: () {
-                        Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) => addNewSemester(student1:student1)));
-                      },
-                    ),
-                  ],
-                ),
-              ),
-              //the previouse semester listview
-              Expanded(child: previousSemesterListView(cummulGpa, callback)),
-              //holds all the gpa's on the bottom
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
+              )),
+            ),
+            Positioned(
+                top: -100,
+                left: 0,
+                child: FadeAnimation(1.3,Container(
+                  width: width,
+                  height: 400,
+                  decoration: BoxDecoration(
+                      image: DecorationImage(
+                        image: AssetImage('assets/images/one.png'),
+                        fit: BoxFit.cover,
+                      )
+                  ),
+                )),
+            ),
+            Positioned(
+                top: -150,
+                left: 0,
+                child: FadeAnimation(1.6,Container(
+                  width: width,
+                  height: 400,
+                  decoration: BoxDecoration(
+                      image: DecorationImage(
+                        image: AssetImage('assets/images/one.png'),
+                        fit: BoxFit.cover,
+                      )
+                  ),
+                )),
+            ),
+            Container(
+              padding: EdgeInsets.all(20.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  //box for cummulative gpa
-                  Card(
-                    child: Container(
-                      //rounding of the boxes
-                      decoration: new BoxDecoration(
-                          color: Colors.white,
-                          borderRadius:
-                          new BorderRadius.all(Radius.circular(30))),
-                      width: width/2.5,
-                      height: height/9,
-                      //the title text with padding to move the text arround for fun
-                      child: Column(
-                        children: <Widget>[
-                          Padding(
-                            padding: EdgeInsets.fromLTRB(25.0, 20.0, 32.0, 0.0),
-                            child: Text(
-                              "Overall GPA",
-                              textScaleFactor: 1,
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                  color: Colors.blueAccent
+                  FadeAnimation(1, Text("Weclome to GradePost",
+                  style: TextStyle(color: Colors.white, fontSize:50 ), )),
+                  SizedBox(height: 15,),
+                  FadeAnimation(1.3, Text("A better experience \nbecause students just don't have the time.",
+                    style: TextStyle(color: Colors.white.withOpacity(.7), height: 1.4, fontSize: 20),)),
+                  SizedBox(height: 180,),
+                  FadeAnimation(1.6, AnimatedBuilder(
+                    animation: _scaleController,
+                    builder: (context, child) => Transform.scale(
+                    scale: _scaleAnimation.value,
+                    child:Center(
+                      child: AnimatedBuilder(
+                        animation: _widthController,
+                        builder: (context, child) => Container(
+                        width: _widthAnimation.value,
+                        height: 80,
+                        padding: EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(50),
+                          color: Colors.blue.withOpacity(.4)
+                        ),
+                        child: InkWell(
+                          onTap: (){
+                            _scaleController.forward();
+                          },
+                          child: Stack(
+                            children: <Widget>[
+                              AnimatedBuilder(
+                                animation: _positionController,
+                                builder: (context, child)=> Positioned(
+                                left: _positionAnimation.value,
+                                  child: AnimatedBuilder(
+                                    animation: _scale2Controller,
+                                    builder: (context, child) => Transform.scale(
+                                      scale: _scale2Animation.value,
+                                    child: Container(
+                                      width: 60,
+                                      height: 60,
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        color: Colors.blue
+                                    ),
+                                    child: hideIcon == false ? Icon(Icons.arrow_forward, color: Colors.white, ) : Container(),
+                                )
+                                ),
+                               ),
+                            ),
                               ),
-                            ),
+                            ]
                           ),
-                          //the gpa text with padding to move the text arround for fun
-                          Padding(
-                            padding: EdgeInsets.fromLTRB(35.0, 0.0, 32.0, 16.0),
-                            child: Text(
-                              cummulGpa.toString(),
-                              textScaleFactor: 1.4,
-
-                            ),
-                          )
-                        ],
+                        )),
                       ),
-                    ),
-                  ),
-                  //same as the card before
-                  Card(
-                    child: Container(
-                      decoration: new BoxDecoration(
-                          color: Colors.white,
-                          borderRadius:
-                          new BorderRadius.all(Radius.circular(30))),
-                      width: width/2.5,
-                      height: height/9,
-                      child: Column(
-                        children: <Widget>[
-                          Padding(
-                            padding: EdgeInsets.fromLTRB(25.0, 20.0, 32.0, 0.0),
-                            child: Text(
-                              " Current GPA ",
-                              textScaleFactor: 1,
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                  color: Colors.blueAccent
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.fromLTRB(30.0, 0.0, 32.0, 16.0),
-                            child: Text(
-                              currentGpa.toString(),
-                              textScaleFactor: 1.4,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              )
-            ],
-          ),
-
-      ),
-    );
-  }
-}
-
-//I think this is useless but im not sure
-class appBarIcons {
-  const appBarIcons({this.title, this.icon});
-  final String title;
-  final IconData icon;
-}
-
-
-
-
-class currentSemesterListView extends StatefulWidget {
-  String cummulGpa;
-  Function(String) callback1;
-  currentSemesterListView(this.cummulGpa, this.callback1);
-
-  @override
-  _currentSemesterListViewState createState() =>
-      new _currentSemesterListViewState();
-}
-
-class _currentSemesterListViewState extends State<currentSemesterListView> {
-  @override
-  static Map nug = student1.getPreviousSemester();
-
-  //print(lengths);
-  Widget build(BuildContext context) {
-    return ListView.builder(
-      itemCount: student1.getCurrentSemester().length,
-      itemBuilder: (BuildContext context, int index) {
-        String key = student1.getCurrentSemester().keys.elementAt(index);
-        return InkWell(
-          child: Dismissible(
-            key: new Key(key),
-            onDismissed: (direction) {
-              student1.removeClass(key);
-              //student1.getPreviousSemester().remove(key);
-              //print(student1.getPreviousSemester());
-              //Scaffold.of(context).showSnackBar(
-              //new SnackBar(content: new Text("Removed Semester")));
-              widget.callback1(student1.getCurrentGPA().toString());
-            },
-            background: Container(
-              alignment: AlignmentDirectional.centerEnd,
-              color: Colors.red,
-              child: Icon(
-                Icons.delete,
-                color: Colors.white,
-              ),
-            ),
-            direction: DismissDirection.endToStart,
-            child: Container(
-              //rounded edges
-              height: 50,
-              //color: Colors.amber[600],
-              child: Card(
-                color: changeGradeColor(student1.getCurrentSemester()[key].grade).color,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    //for the name
-                    Padding(
-                      padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
-                      child: Text(
-                        key,
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                    //for the grade
-                    Padding(
-                      padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
-                      child: Text(
-                        student1.getCurrentSemester()[key].grade.toString(),
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-          onTap: (){
-            Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) => oneClass(student1:student1,name:key)));
-          },
-        );
-      },
-    );
-  }
-//MyApp createState() => MyApp();
-}
-
-
-/*
-//the list view for the current semester
-class _currentSemesterListViewState extends StatelessWidget {
-  @override
-
-  //sets the student map to nug
-  //its not neccssay and should be changes
-
-  //int lengths = nug.length;
-
-  //adds the colums in the listview
-  Widget build(BuildContext context) {
-    return ListView.builder(
-
-      itemCount: student1.getCurrentSemester().length,
-      itemBuilder: (BuildContext context, int index) {
-
-        String key = student1.getCurrentSemester().keys.elementAt(index);
-        //tells what each colum should look like
-        return InkWell(
-          child: Container(
-            //rounded edges
-            height: 50,
-            //color: Colors.amber[600],
-            child: Card(
-              color: changeGradeColor(student1.getCurrentSemester()[key].grade).color,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  //for the name
-                  Padding(
-                    padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
-                    child: Text(
-                      key,
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                  //for the grade
-                  Padding(
-                    padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
-                    child: Text(
-                      student1.getCurrentSemester()[key].grade.toString(),
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                  ),
+                    )),
+                  )),
+                  SizedBox(height: 60,),
                 ],
               ),
-            ),
-          ),
-          onTap: (){
-            Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) => oneClass(student1:student1,name:key)));
-          },
-        );
-      },
+            )
+          ],
+        ),
+      )
     );
   }
 }
-*/
-class previousSemesterListView extends StatefulWidget {
-  String cummulGpa;
-  Function(String) callback;
-  previousSemesterListView(this.cummulGpa, this.callback);
 
-  @override
-  _previousSemesterListViewState createState() =>
-      new _previousSemesterListViewState();
-}
-
-class _previousSemesterListViewState extends State<previousSemesterListView> {
-  @override
-  static Map nug = student1.getPreviousSemester();
-
-  //print(lengths);
-  Widget build(BuildContext context) {
-    return ListView.builder(
-      itemCount: student1.getPreviousSemester().length,
-      itemBuilder: (BuildContext context, int index) {
-        String key = student1.getPreviousSemester().keys.elementAt(index);
-        return Dismissible(
-          key: new Key(key),
-          onDismissed: (direction) {
-            student1.removeSemester(key);
-            //student1.getPreviousSemester().remove(key);
-            //print(student1.getPreviousSemester());
-            //Scaffold.of(context).showSnackBar(
-            //new SnackBar(content: new Text("Removed Semester")));
-            widget.callback(student1.getCumulativeGpa().toString());
-          },
-          background: Container(
-            alignment: AlignmentDirectional.centerEnd,
-            color: Colors.red,
-            child: Icon(
-              Icons.delete,
-              color: Colors.white,
-            ),
-          ),
-          direction: DismissDirection.endToStart,
-          child: Container(
-            height: 50,
-
-            //color: Colors.amber[600],
-            child: Card(
-              color: changeGpaColor(student1.getPreviousSemester()[key].gpa).color,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  Padding(
-                    padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
-                    child: Text(
-                      key,
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
-                    child: Text(
-                      student1.getPreviousSemester()[key].gpa.toString(),
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        );
-      },
-    );
-  }
-  //MyApp createState() => MyApp();
-}
-
-//the color class helps chose ccolors but i dont know what it does
-class _MyColor {
-  const _MyColor(this.color, this.name);
-
-  final Color color;
-  final String name;
-}
-
-//changes the colors for the current semester
-_MyColor changeGradeColor(double grade) {
-  const List<_MyColor> myBgColors = const <_MyColor>[
-    const _MyColor(null, 'Clear'),
-    const _MyColor(const Color(0xFF76FF03), 'Green'),
-    const _MyColor(const Color(0xFFC6FF00), 'LightGreen'),
-    const _MyColor(const Color(0xFFFFFF00), 'Yellow'),
-    const _MyColor(const Color(0xFFFF1744), 'Red'),
-  ];
-  if (grade >= 90) {
-    return myBgColors[1];
-  } else if (grade >= 80) {
-    return myBgColors[2];
-  } else if (grade >= 70) {
-    return myBgColors[3];
-  } else {
-    return myBgColors[4];
-  }
-}
-
-//changes the colors for the previous semester
-_MyColor changeGpaColor(double grade) {
-  const List<_MyColor> myBgColors = const <_MyColor>[
-    const _MyColor(null, 'Clear'),
-    const _MyColor(const Color(0xFF76FF03), 'Green'),
-    const _MyColor(const Color(0xFFFFFF00), 'Yellow'),
-    const _MyColor(const Color(0xFFFF9100), 'Orange'),
-    const _MyColor(const Color(0xFFFF1744), 'Red'),
-  ];
-  if (grade > 3.0) {
-    return myBgColors[1];
-  } else if (grade > 2.0) {
-    return myBgColors[2];
-  } else if (grade > 1.0) {
-    return myBgColors[3];
-  } else {
-    return myBgColors[4];
-  }
-}

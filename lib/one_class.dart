@@ -3,7 +3,7 @@ import 'package:postgraded/add_new_grade.dart';
 import 'studentObject.dart';
 import 'add_new_distribution.dart';
 import 'edit_distribution.dart';
-import 'main.dart';
+import 'homePage.dart';
 
 class oneClass extends StatefulWidget {
   studentObject student1;

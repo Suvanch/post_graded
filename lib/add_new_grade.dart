@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'studentObject.dart';
-import 'main.dart';
+import 'homePage.dart';
 
 class addNewAssignment extends StatefulWidget {
   studentObject student1;
