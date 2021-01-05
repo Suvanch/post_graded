@@ -6,7 +6,7 @@ class studentObject{
   double totalGPAPoints;
   double cumulativeGPA;
   double totalSemesterCredits = 0;
-  List semesters  = new List<semesterObject>();
+ // List semesters  = new List<semesterObject>();
   Map<String,classObject> currentSemester = new Map<String, classObject>();
   Map<String,semesterObject> previousSemester = new Map<String, semesterObject>();
 
@@ -96,6 +96,9 @@ class studentObject{
   }
   void removeSemester(String name){
     previousSemester.remove(name);
+  }
+  void removeClass(String name){
+    currentSemester.remove(name);
   }
   Map<String,semesterObject>getPreviousSemester(){
     return previousSemester;
@@ -289,6 +292,8 @@ class distributionObject extends tools{
       distributedGrades[name]=double.parse(percent);
     }
   }
+
+
   double getWeightAchived(){
     double weight;
     double average;
@@ -315,6 +320,8 @@ class distributionObject extends tools{
     print(weight);
     return weight;
   }
+
+
   void removeAssignment(String name){
     distributedGrades.remove(name);
   }

@@ -23,24 +23,21 @@ class gradedApp extends StatefulWidget {
   @override
   State<StatefulWidget> createState() =>MyApp(student1);
 }
-/*
-class MyApp  extends State<gradedApp>{
-  @override
-  Widget build(BuildContext context){
-    return new MaterialApp(
-      home: HomeScreen());
-  }
-}
- */
+
 //the actual app so far
 class MyApp  extends State<gradedApp> {
   //changes cumulative gpa
-  double currentGpa = student1.getCurrentGPA();
+  String currentGpa = student1.getCurrentGPA().toString();
   String cummulGpa = student1.getCumulativeGpa().toString();
   MyApp(student1);
   callback(newCummulGpa) {
     setState(() {
       cummulGpa = newCummulGpa;
+    });
+  }
+  callback1(newCurrGpa){
+    setState(() {
+      currentGpa = newCurrGpa;
     });
   }
 
@@ -112,7 +109,7 @@ class MyApp  extends State<gradedApp> {
                 ),
               ),
               //the current semester listview
-             Expanded(child: currentSemesterListView()),
+             Expanded(child: currentSemesterListView(currentGpa.toString(), callback1)),
               //currentSemesterListView(),
               //the title for previous semesters
               //properly centered
@@ -231,8 +228,94 @@ class appBarIcons {
   final IconData icon;
 }
 
+
+
+
+class currentSemesterListView extends StatefulWidget {
+  String cummulGpa;
+  Function(String) callback1;
+  currentSemesterListView(this.cummulGpa, this.callback1);
+
+  @override
+  _currentSemesterListViewState createState() =>
+      new _currentSemesterListViewState();
+}
+
+class _currentSemesterListViewState extends State<currentSemesterListView> {
+  @override
+  static Map nug = student1.getPreviousSemester();
+
+  //print(lengths);
+  Widget build(BuildContext context) {
+    return ListView.builder(
+      itemCount: student1.getCurrentSemester().length,
+      itemBuilder: (BuildContext context, int index) {
+        String key = student1.getCurrentSemester().keys.elementAt(index);
+        return InkWell(
+          child: Dismissible(
+            key: new Key(key),
+            onDismissed: (direction) {
+              student1.removeClass(key);
+              //student1.getPreviousSemester().remove(key);
+              //print(student1.getPreviousSemester());
+              //Scaffold.of(context).showSnackBar(
+              //new SnackBar(content: new Text("Removed Semester")));
+              widget.callback1(student1.getCurrentGPA().toString());
+            },
+            background: Container(
+              alignment: AlignmentDirectional.centerEnd,
+              color: Colors.red,
+              child: Icon(
+                Icons.delete,
+                color: Colors.white,
+              ),
+            ),
+            direction: DismissDirection.endToStart,
+            child: Container(
+              //rounded edges
+              height: 50,
+              //color: Colors.amber[600],
+              child: Card(
+                color: changeGradeColor(student1.getCurrentSemester()[key].grade).color,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    //for the name
+                    Padding(
+                      padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
+                      child: Text(
+                        key,
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                    //for the grade
+                    Padding(
+                      padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
+                      child: Text(
+                        student1.getCurrentSemester()[key].grade.toString(),
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+          onTap: (){
+            Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => oneClass(student1:student1,name:key)));
+          },
+        );
+      },
+    );
+  }
+//MyApp createState() => MyApp();
+}
+
+
+/*
 //the list view for the current semester
-class currentSemesterListView extends StatelessWidget {
+class _currentSemesterListViewState extends StatelessWidget {
   @override
 
   //sets the student map to nug
@@ -288,7 +371,7 @@ class currentSemesterListView extends StatelessWidget {
     );
   }
 }
-
+*/
 class previousSemesterListView extends StatefulWidget {
   String cummulGpa;
   Function(String) callback;
